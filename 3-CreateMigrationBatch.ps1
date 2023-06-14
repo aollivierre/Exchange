@@ -1,4 +1,22 @@
-# 5- Output the total number of users in the CSV file
+# 1- Check if Exchange Online PS Module is installed. If not, install it
+if (!(Get-Module -ListAvailable -Name ExchangeOnlineManagement)) {
+    Write-Host "Installing Exchange Online Management Module..." -ForegroundColor Cyan
+    Install-Module -Name ExchangeOnlineManagement -Force
+    Write-Host "Installation of Exchange Online Management Module is complete!" -ForegroundColor Green
+}
+
+# 2- Import the module
+Import-Module ExchangeOnlineManagement
+
+# 3- Connect to Exchange Online
+Write-Host "Connecting to Exchange Online..." -ForegroundColor Cyan
+# $UserCredential = Get-Credential
+# Connect-ExchangeOnline -Credential $UserCredential -ShowBanner:$false
+Connect-ExchangeOnline
+Write-Host "Connection to Exchange Online is successful!" -ForegroundColor Green
+
+
+# 4- Output the total number of users in the CSV file
 $csvFilePath = "C:\Code\CB\Exchange\Glebe\Exports\Glebe-Migration_32Users_AD_Email_Alias_Hybrid_Migration.csv" # Replace with your CSV file path
 $csvFile = @(Import-Csv -Path $csvFilePath)
 $totalUsers = $csvFile.Count
