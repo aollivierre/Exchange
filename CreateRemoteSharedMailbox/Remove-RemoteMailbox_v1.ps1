@@ -13,9 +13,7 @@
 #>
 
 function RemoveRemoteSharedMailbox {
-    param (
-        [string]$Name = Read-Host -Prompt "Enter the name for the mailbox",
-    )
+    $Name = Read-Host -Prompt "Enter the name for the mailbox"
 
     # Ensure the Exchange cmdlets are loaded
     if (-not (Get-Command -Name Remove-RemoteMailbox -ErrorAction Ignore)) {
