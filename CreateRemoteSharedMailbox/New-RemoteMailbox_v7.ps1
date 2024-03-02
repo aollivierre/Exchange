@@ -14,6 +14,14 @@ Creates a remote shared mailbox in Exchange.
 8. If the user and mailbox were created successfully, the function outputs the user's GUID and final statistics, including the number of users in the OU and the total number of mailboxes, remote mailboxes, and remote shared mailboxes.
 9. If the creation was not successful, the function outputs an error message.
 
+
+
+TO-DO
+
+- create a function give OU suggestions to user based on the number of ENABLED USERS on each OU sorted highest to lowest or allow the user to enter their own OU
+- create a function to list the new remote shared mailbox info after creation and list all of its new details including proxy addresses because some times the Exchange Policy will create SMTP (upper case addresses that includes first initial for generic accounts which does not make sense for these type of accounts)
+
+
 .PARAMETER None
 
 .EXAMPLE
