@@ -1,0 +1,1 @@
+[System.Net.Dns]::GetHostEntry([System.Net.Dns]::GetHostName()).HostName

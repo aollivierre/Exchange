@@ -1,0 +1,11 @@
+# v3ext.txt
+keyUsage=digitalSignature,keyEncipherment
+extendedKeyUsage=serverAuth
+subjectKeyIdentifier=hash
+subjectAltName = @alt_names
+#Modify for your details. Must include the commonName in the list below also. 
+#The *.AGH.com will allow all Domain controllers with 
+#the hostname somthing.AGH.com to use the cert.
+[alt_names]
+DNS.1 = *.AGH.com
+DNS.2 = AGH.com
