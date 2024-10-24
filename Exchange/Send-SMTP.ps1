@@ -1,6 +1,6 @@
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 $EmailFrom = "SMTP@yourdomain.com"
-$EmailTo = "aollivierre@novanetworks.com"
+$EmailTo = "aollivierre@contoso.com"
 $Subject = "The subject of your email"
 $Body = "What do you want your email to say"
 $SMTPServer = "smtp.office365.com"
