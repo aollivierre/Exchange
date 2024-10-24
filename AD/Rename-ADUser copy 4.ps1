@@ -25,8 +25,8 @@ function Rename-ExistingUser {
             Write-Host "Renamed AD object to $newName." -ForegroundColor Green
 
             # Update the main attributes
-            $newUPN = ($existingUser.UserPrincipalName -replace "@.*$", $NewSuffix + "@arnpriorhealth.ca")
-            $newEmail = ($existingUser.EmailAddress -replace "@.*$", $NewSuffix + "@arnpriorhealth.ca")
+            $newUPN = ($existingUser.UserPrincipalName -replace "@.*$", $NewSuffix + "@contoso.com")
+            $newEmail = ($existingUser.EmailAddress -replace "@.*$", $NewSuffix + "@contoso.com")
 
             Set-ADUser -Identity $existingUser `
                 -DisplayName ($existingUser.DisplayName + $NewSuffix) `
@@ -111,7 +111,7 @@ if (-not $mailbox -and -not $mailUser) {
 
     # Create a new remote mailbox
     try {
-        New-RemoteMailbox -Name "Jordan Heuser" -Alias "JHeuser" -UserPrincipalName "enter email address" -PrimarySmtpAddress "enter email address" -RemoteRoutingAddress "JHeuser@arnpriorhealth.mail.onmicrosoft.com"
+        New-RemoteMailbox -Name "Jordan Heuser" -Alias "JHeuser" -UserPrincipalName "enter email address" -PrimarySmtpAddress "enter email address" -RemoteRoutingAddress "JHeuser@contoso.com.mail.onmicrosoft.com"
         Write-Host "New remote mailbox created." -ForegroundColor Green
     } catch {
         Write-Host "Failed to create new remote mailbox: $($_.Exception.Message)" -ForegroundColor Red

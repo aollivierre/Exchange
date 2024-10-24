@@ -1,1 +1,1 @@
-﻿Send-MailMessage -SmtpServer 'arnpriorhealth.mail.protection.outlook.com' -Port '25' -From 'SMTP@arnpriorhealth.ca' -To 'aollivierre@novanetworks.com' -Subject test -Body test
+﻿Send-MailMessage -SmtpServer 'contoso.com.mail.protection.outlook.com' -Port '25' -From 'SMTP@contoso.com' -To 'aollivierre@novanetworks.com' -Subject test -Body test

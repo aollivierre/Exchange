@@ -23,10 +23,10 @@ if ($disabledMailbox) {
 
 # Step 4: Enable or Create a Remote Mailbox
 if (-not $mailbox -and $mailUser) {
-    Enable-RemoteMailbox -Identity "enter email address" -RemoteRoutingAddress "JHeuser@arnpriorhealth.mail.onmicrosoft.com"
+    Enable-RemoteMailbox -Identity "enter email address" -RemoteRoutingAddress "JHeuser@contoso.com.mail.onmicrosoft.com"
     Write-Output "Remote mailbox created."
 } elseif (-not $mailbox) {
-    New-RemoteMailbox -Name "JHeuser" -Alias "JHeuser" -UserPrincipalName "enter email address" -PrimarySmtpAddress "enter email address" -RemoteRoutingAddress "JHeuser@arnpriorhealth.mail.onmicrosoft.com"
+    New-RemoteMailbox -Name "JHeuser" -Alias "JHeuser" -UserPrincipalName "enter email address" -PrimarySmtpAddress "enter email address" -RemoteRoutingAddress "JHeuser@contoso.com.mail.onmicrosoft.com"
     Write-Output "New remote mailbox created."
 }
 

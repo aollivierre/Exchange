@@ -34,7 +34,7 @@ if ($disabledMailbox) {
 # Step 4: Create a New Remote Mailbox if No Existing Mailbox or Mail User Found
 if (-not $mailbox -and -not $mailUser -and -not $disabledMailbox) {
     try {
-        New-RemoteMailbox -Name "Jordan Heuser" -Alias "JHeuser" -UserPrincipalName "enter email address" -PrimarySmtpAddress "enter email address" -RemoteRoutingAddress "JHeuser@arnpriorhealth.mail.onmicrosoft.com"
+        New-RemoteMailbox -Name "Jordan Heuser" -Alias "JHeuser" -UserPrincipalName "enter email address" -PrimarySmtpAddress "enter email address" -RemoteRoutingAddress "JHeuser@contoso.com.mail.onmicrosoft.com"
         Write-Host "New remote mailbox created." -ForegroundColor Green
     } catch {
         Write-Host "Failed to create new remote mailbox: $($_.Exception.Message)" -ForegroundColor Red

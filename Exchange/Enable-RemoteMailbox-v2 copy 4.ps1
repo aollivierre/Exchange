@@ -14,7 +14,7 @@ function Ensure-ADReplication {
 # Connect-MgGraph -Scopes "User.Read.All"
 
 # # Get the user details
-# $user = Get-MgUser -UserId "Jgauthier@arnpriorhealth.ca"
+# $user = Get-MgUser -UserId "Jgauthier@contoso.com"
 
 # if ($user) {
 #     Write-Output "User found in Entra ID: $($user.DisplayName)"
@@ -24,23 +24,23 @@ function Ensure-ADReplication {
 # }
 
 # Step 2: Check On-Premises Exchange Management Server
-$mailbox = Get-Mailbox -Identity "Jgauthier@arnpriorhealth.ca" -ErrorAction SilentlyContinue
-$mailUser = Get-MailUser -Identity "Jgauthier@arnpriorhealth.ca" -ErrorAction SilentlyContinue
+$mailbox = Get-Mailbox -Identity "Jgauthier@contoso.com" -ErrorAction SilentlyContinue
+$mailUser = Get-MailUser -Identity "Jgauthier@contoso.com" -ErrorAction SilentlyContinue
 
 if ($mailbox) {
     Write-Output "Mailbox found: $($mailbox.PrimarySmtpAddress)"
 } elseif ($mailUser) {
     Write-Output "Mail user found: $($mailUser.PrimarySmtpAddress)"
 } else {
-    Write-Output "No mailbox or mail user found for Jgauthier@arnpriorhealth.ca."
+    Write-Output "No mailbox or mail user found for Jgauthier@contoso.com."
 }
 
 # Step 3: Identify Disabled Mailboxes (correct the recipient type)
-$disabledMailbox = Get-User -RecipientTypeDetails DisabledUser -Identity "Jgauthier@arnpriorhealth.ca" -ErrorAction SilentlyContinue
+$disabledMailbox = Get-User -RecipientTypeDetails DisabledUser -Identity "Jgauthier@contoso.com" -ErrorAction SilentlyContinue
 
 if ($disabledMailbox) {
     Write-Output "Disabled user found: $($disabledMailbox.PrimarySmtpAddress)"
-    Enable-Mailbox -Identity "Jgauthier@arnpriorhealth.ca"
+    Enable-Mailbox -Identity "Jgauthier@contoso.com"
     Write-Output "Mailbox enabled."
 } else {
     Write-Output "No disabled mailbox found."
@@ -49,7 +49,7 @@ if ($disabledMailbox) {
 # Step 4: Identify Existing Object and Resolve Conflict
 if (-not $mailbox -and -not $mailUser) {
     # Find the existing object with the UPN
-    $existingObject = Get-Recipient -Filter "EmailAddresses -eq 'SMTP:Jgauthier@arnpriorhealth.ca'"
+    $existingObject = Get-Recipient -Filter "EmailAddresses -eq 'SMTP:Jgauthier@contoso.com'"
 
     if ($existingObject) {
         Write-Output "Existing object found with UPN: $($existingObject.DisplayName), Type: $($existingObject.RecipientType)"
@@ -81,7 +81,7 @@ if (-not $mailbox -and -not $mailUser) {
     Ensure-ADReplication
 
     # Recheck and remove existing object if it still exists
-    $existingObject = Get-Recipient -Filter "EmailAddresses -eq 'SMTP:Jgauthier@arnpriorhealth.ca'"
+    $existingObject = Get-Recipient -Filter "EmailAddresses -eq 'SMTP:Jgauthier@contoso.com'"
     if ($existingObject) {
         Write-Output "Existing object still found after replication. Manual intervention required."
         exit
@@ -89,7 +89,7 @@ if (-not $mailbox -and -not $mailUser) {
 
     # Create a new remote mailbox
     try {
-        New-RemoteMailbox -Name "jgauthier" -Alias "Jgauthier" -UserPrincipalName "Jgauthier@arnpriorhealth.ca" -PrimarySmtpAddress "Jgauthier@arnpriorhealth.ca" -RemoteRoutingAddress "JHeuser@arnpriorhealth.mail.onmicrosoft.com"
+        New-RemoteMailbox -Name "jgauthier" -Alias "Jgauthier" -UserPrincipalName "Jgauthier@contoso.com" -PrimarySmtpAddress "Jgauthier@contoso.com" -RemoteRoutingAddress "JHeuser@contoso.com.mail.onmicrosoft.com"
         Write-Output "New remote mailbox created."
     } catch {
         Write-Output "Failed to create new remote mailbox: $($_.Exception.Message)"
@@ -97,7 +97,7 @@ if (-not $mailbox -and -not $mailUser) {
 }
 
 # # Step 5: Verify the Mailbox in Exchange Online
-# $mailboxOnline = Get-Mailbox -Identity "Jgauthier@arnpriorhealth.ca" -ErrorAction SilentlyContinue
+# $mailboxOnline = Get-Mailbox -Identity "Jgauthier@contoso.com" -ErrorAction SilentlyContinue
 
 # if ($mailboxOnline) {
 #     Write-Output "Mailbox found in Exchange Online: $($mailboxOnline.PrimarySmtpAddress)"
@@ -107,5 +107,5 @@ if (-not $mailbox -and -not $mailUser) {
 
 # # Step 6: Import PST File Using Microsoft Purview
 # # Ensure you have the PST file available and the necessary permissions
-# $importRequest = New-MailboxImportRequest -Mailbox "Jgauthier@arnpriorhealth.ca" -FilePath "\\path\to\pst\file.pst"
+# $importRequest = New-MailboxImportRequest -Mailbox "Jgauthier@contoso.com" -FilePath "\\path\to\pst\file.pst"
 # Write-Output "Mailbox import request created. Request ID: $($importRequest.RequestGuid)"

@@ -243,10 +243,10 @@ Export-UserDetails -UserEmail $userEmail -ShowGridView $true
 # Prompt for user information
 $example = @"
 Example input:
-Email: jgauthier@arnpriorhealth.ca
+Email: jgauthier@contoso.com
 Name: John Gauthier
 Alias: jgauthier
-Domain: arnpriorhealth.ca
+Domain: contoso.com
 "@
 
 Write-Host "`n$example`n" -ForegroundColor Cyan

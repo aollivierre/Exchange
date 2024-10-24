@@ -3,7 +3,7 @@ $userDetails = @{
     GivenName           = "Khushpreet"
     Surname             = "Kaur"
     SamAccountName      = "KKaur"
-    UserPrincipalName   = "KKaur@arnpriorhealth.ca"
+    UserPrincipalName   = "KKaur@contoso.com"
     Name                = "Khushpreet Kaur"
     Path                = "OU=ADMH,OU=User Accounts,OU=Users,OU=ARH,DC=admh,DC=arnpriorhospital,DC=com"
     AccountPassword     = ConvertTo-SecureString "P@ssword123" -AsPlainText -Force
@@ -14,8 +14,8 @@ $userDetails = @{
 
 $emailDetails = @{
     Identity           = "KKaur"
-    EmailAddress       = "KKaur@arnpriorhealth.ca"
-    UserPrincipalName  = "KKaur@arnpriorhealth.ca"
+    EmailAddress       = "KKaur@contoso.com"
+    UserPrincipalName  = "KKaur@contoso.com"
     DisplayName        = "Khushpreet Kaur"
 }
 

@@ -12,6 +12,6 @@ if ($mailbox) {
 
 
 if (-not $mailbox) {
-    Enable-RemoteMailbox -Identity "enter email address" -RemoteRoutingAddress "JHeuser@arnpriorhealth.mail.onmicrosoft.com"
+    Enable-RemoteMailbox -Identity "enter email address" -RemoteRoutingAddress "JHeuser@contoso.com.mail.onmicrosoft.com"
     Write-Output "Remote mailbox created."
 }
