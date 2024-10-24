@@ -4,7 +4,7 @@ function Export-LdapsPfx {
     param (
         [string]$thumbprint = '27DBDC90B738F29FDB464F81936D4112A78B7059',
         [string]$pfxFileName = 'LDAPS_PRIVATEKEY.pfx',
-        [string]$password = '6I9?4oxv%Ai(WERqJ?9iLB]V)7d3Kk6]'
+        [string]$password = 'enter your password'
     )
 
     $pfxFilePath = Join-Path -Path $scriptDir -ChildPath $pfxFileName
