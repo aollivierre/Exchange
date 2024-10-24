@@ -1,21 +1,21 @@
 # Step 2: Check On-Premises Exchange Management Server
-$mailbox = Get-Mailbox -Identity "JHeuser@arnpriorhealth.ca" -ErrorAction SilentlyContinue
-$mailUser = Get-MailUser -Identity "JHeuser@arnpriorhealth.ca" -ErrorAction SilentlyContinue
+$mailbox = Get-Mailbox -Identity "enter email address" -ErrorAction SilentlyContinue
+$mailUser = Get-MailUser -Identity "enter email address" -ErrorAction SilentlyContinue
 
 if ($mailbox) {
     Write-Output "Mailbox found: $($mailbox.PrimarySmtpAddress)"
 } elseif ($mailUser) {
     Write-Output "Mail user found: $($mailUser.PrimarySmtpAddress)"
 } else {
-    Write-Output "No mailbox or mail user found for JHeuser@arnpriorhealth.ca."
+    Write-Output "No mailbox or mail user found for enter email address."
 }
 
 # Step 3: Identify Disabled Mailboxes (correct the recipient type)
-$disabledMailbox = Get-User -RecipientTypeDetails DisabledUser -Identity "JHeuser@arnpriorhealth.ca" -ErrorAction SilentlyContinue
+$disabledMailbox = Get-User -RecipientTypeDetails DisabledUser -Identity "enter email address" -ErrorAction SilentlyContinue
 
 if ($disabledMailbox) {
     Write-Output "Disabled user found: $($disabledMailbox.PrimarySmtpAddress)"
-    Enable-Mailbox -Identity "JHeuser@arnpriorhealth.ca"
+    Enable-Mailbox -Identity "enter email address"
     Write-Output "Mailbox enabled."
 } else {
     Write-Output "No disabled mailbox found."
@@ -24,7 +24,7 @@ if ($disabledMailbox) {
 # Step 4: Identify Existing Object and Resolve Conflict
 if (-not $mailbox -and -not $mailUser) {
     # Find the existing object with the UPN
-    $existingObject = Get-Recipient -Filter "EmailAddresses -eq 'SMTP:JHeuser@arnpriorhealth.ca'"
+    $existingObject = Get-Recipient -Filter "EmailAddresses -eq 'SMTP:enter email address'"
 
     if ($existingObject) {
         Write-Output "Existing object found with UPN: $($existingObject.DisplayName), Type: $($existingObject.RecipientType)"
@@ -43,6 +43,6 @@ if (-not $mailbox -and -not $mailUser) {
     }
 
     # Create a new remote mailbox
-    New-RemoteMailbox -Name "JHeuser" -Alias "JHeuser" -UserPrincipalName "JHeuser@arnpriorhealth.ca" -PrimarySmtpAddress "JHeuser@arnpriorhealth.ca" -RemoteRoutingAddress "JHeuser@arnpriorhealth.mail.onmicrosoft.com"
+    New-RemoteMailbox -Name "JHeuser" -Alias "JHeuser" -UserPrincipalName "enter email address" -PrimarySmtpAddress "enter email address" -RemoteRoutingAddress "JHeuser@arnpriorhealth.mail.onmicrosoft.com"
     Write-Output "New remote mailbox created."
 }

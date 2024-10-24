@@ -1,5 +1,5 @@
 # Update the Name property of the user
-$existingUser = Get-ADUser -Filter {UserPrincipalName -eq "JHeuser@arnpriorhealth.ca"}
+$existingUser = Get-ADUser -Filter {UserPrincipalName -eq "enter email address"}
 if ($existingUser) {
     Rename-ADObject -Identity $existingUser.DistinguishedName -NewName "Jordan Heuser"
     Write-Host "Updated Name to Jordan Heuser." -ForegroundColor Green
