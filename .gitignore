@@ -6,6 +6,8 @@
 *.txt
 *.xps
 
+*secret*
+
 
 # Ignore sensitive files
 *.pem
