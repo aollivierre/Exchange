@@ -1,0 +1,1 @@
+Get-Mailbox -RecipientTypeDetails SharedMailbox -ResultSize Unlimited | Select-Object DisplayName, UserPrincipalName, PrimarySmtpAddress, WhenMailboxCreated | Sort-Object WhenMailboxCreated | Export-Csv -Path "$env:USERPROFILE\Desktop\AllSharedMailboxes_ALL.csv" -NoTypeInformation

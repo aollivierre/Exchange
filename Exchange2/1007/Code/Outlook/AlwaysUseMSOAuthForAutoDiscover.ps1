@@ -1,0 +1,1 @@
+if (-Not (Test-Path "HKCU:\Software\Microsoft\Exchange")) { New-Item -Path "HKCU:\Software\Microsoft\Exchange" -Force }; if (-Not (Get-ItemProperty -Path "HKCU:\Software\Microsoft\Exchange" -Name "AlwaysUseMSOAuthForAutoDiscover" -ErrorAction SilentlyContinue)) { Set-ItemProperty -Path "HKCU:\Software\Microsoft\Exchange" -Name "AlwaysUseMSOAuthForAutoDiscover" -Value 1 }

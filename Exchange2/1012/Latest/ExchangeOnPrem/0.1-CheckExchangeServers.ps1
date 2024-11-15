@@ -1,0 +1,1 @@
+Get-ExchangeServer | Format-Table Name, Domain, ServerRole, Edition, AdminDisplayVersion

@@ -1,0 +1,3 @@
+Add-MailboxPermission -Identity "SPLC@railcan.ca" -User "mbarfoot@railcan.ca" -AccessRights FullAccess -InheritanceType All -AutoMapping $true
+Add-MailboxPermission -Identity "SPLC@railcan.ca" -User "bbowman@railcan.ca" -AccessRights FullAccess -InheritanceType All -AutoMapping $true
+Add-MailboxPermission -Identity "SPLC@railcan.ca" -User "EDeBenetti@railcan.ca" -AccessRights FullAccess -InheritanceType All -AutoMapping $true

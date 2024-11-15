@@ -3,3 +3,183 @@
 *.xml
 *.log
 *.evtx
+*.txt
+*.xps
+
+
+# Ignore sensitive files
+*.pem
+*.key
+*.crt
+*.cer
+*.pfx
+*.asc
+*.enc
+*.jks
+*.p12
+*.p7b
+*.gpg
+*.env
+.env.*
+*.secrets
+*.credentials
+*.config.local
+secret.*
+*.vault
+
+# Ignore SSH and private keys
+id_rsa
+id_rsa.pub
+id_dsa
+id_ecdsa
+id_ed25519
+
+# Ignore API keys and token files
+*.token
+*.oauth
+*.json.secret
+*.keyring
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+.Spotlight-V100/
+.Trashes/
+ehthumbs.db
+
+# Ignore temporary files
+*.swp
+*.swo
+*.tmp
+*.bak
+*.orig
+*.log
+*.trace
+*.pid
+*.lock
+*.cache
+*.tgz
+*.tar.gz
+*.zip
+*.rar
+
+# Ignore IDE configuration files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.iml
+*.code-workspace
+
+# Ignore Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-error.log
+pnpm-debug.log
+*.tsbuildinfo
+
+# Ignore Python virtual environments and cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Ignore macOS files
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# Ignore Windows files
+*.exe
+*.dll
+*.pdb
+*.com
+*.bat
+*.cmd
+
+# Ignore build artifacts
+build/
+dist/
+out/
+*.o
+*.obj
+*.so
+*.class
+*.jar
+*.war
+*.ear
+*.db
+
+# Ignore Git-specific files
+.git/
+.gitconfig
+.gitignore.lock
+.gitmodules
+.git-credentials
+*.idx
+*.pack
+
+# Ignore Docker-related files
+docker-compose.override.yml
+.dockerignore
+
+# Ignore Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Ignore Ansible vault files
+*.vault
+
+# Ignore Kubernetes configuration
+.kube/
+
+# Ignore temporary files from text editors
+*.~*
+*.bak
+*.tmp
+
+# Ignore sensitive PowerShell files
+# *.ps1xml
+# *.pssc
+# *.psd1
+# *.ps1
+
+# Ignore personal configuration files
+*.bashrc
+*.zshrc
+*.profile
+*.bash_profile
+
+# Ignore Azure and AWS credentials
+.azure/
+*.aws/
+.aws/credentials
+.aws/config
+
+# Ignore GCP credentials
+*.json
+gcloud/
+.google/
+
+# Ignore sensitive JSON and YAML files
+*.secret.json
+*.config.json
+*.config.yaml
+*.config.yml
+
+# Ignore temporary Git hooks
+.hooks/
+
+# Ignore CI/CD environment files
+.env.production
+.env.development
+.env.staging
+.env.test

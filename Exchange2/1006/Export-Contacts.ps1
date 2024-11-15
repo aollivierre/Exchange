@@ -1,0 +1,1 @@
+Get-MailContact -ResultSize Unlimited | Select-Object Name, PrimarySmtpAddress, Alias, ExternalEmailAddress | Export-Csv -Path "C:\code\exchange\mail_contacts.csv" -NoTypeInformation

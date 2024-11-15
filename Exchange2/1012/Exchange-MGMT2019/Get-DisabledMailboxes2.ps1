@@ -1,0 +1,2 @@
+$dbs = Get-MailboxDatabase
+$dbs | ForEach-Object {Get-MailboxStatistics -Database $_.DistinguishedName} | Where-Object {$_.DisplayName -eq "Emma  Tibbo"} | Format-List DisplayName,Database,DisconnectReason
