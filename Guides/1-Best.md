@@ -433,6 +433,8 @@ $Password = Read-Host "Enter temporary password" -AsSecureString
 
 New-RemoteMailbox -Name "John Doe" -FirstName "John" -LastName "Doe" -UserPrincipalName "<john.doe@yourdomain.com>" -Password $Password
 
+You can instead use this script https://github.com/aollivierre/Exchange/blob/main/Exchange2/1013/Exchange/New-RemoteSharedMailbox-v10%20copy.ps1 to automate the entire process. Please make sure to first update the values inside of the script to meet your needs before running it.
+
 - - - **Note:**
             - Replace "John Doe", "John", "Doe", and "<john.doe@yourdomain.com>" with the user's actual information.
             - The -Password parameter sets a temporary password for the new user account.
