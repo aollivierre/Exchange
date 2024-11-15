@@ -7,7 +7,14 @@
 *.xps
 
 *secret*
+*Secret*
+*SECRET*
+
+
 *secrets*
+*Secrets*
+*SECRETs*
+
 
 
 # Ignore sensitive files
