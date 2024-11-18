@@ -59,6 +59,7 @@
 
 
 
+> 🔔 **Note:** To enhance your Exchange management capabilities, consider cloning the Exchange PowerShell Scripts Repository. This repository offers a wide range of PowerShell tools and scripts that can assist with various administrative tasks in Exchange Server and Exchange Online. For detailed instructions on how to clone and utilize these scripts, please refer to the Utilizing the Exchange PowerShell Scripts Repository section in this guide.
 
 
 # Quick Reference Cheat Sheet: Managing Exchange Attributes and Remote User Mailboxes
