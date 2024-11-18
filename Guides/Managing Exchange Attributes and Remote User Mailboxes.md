@@ -36,6 +36,29 @@
    - [Conclusion](#conclusion)
 
 
+
+
+| Aspect                             | Option 1: Exchange Admin Center (EAC) | Option 2: Exchange Management Shell (EMS) | Option 3: Exchange Recipient Management PowerShell Module |
+|------------------------------------|---------------------------------------|-------------------------------------------|----------------------------------------------------------|
+| **Description**                    | Web-based GUI for managing Exchange   | PowerShell cmdlets for Exchange management| PowerShell module for recipient management without on-premises Exchange server |
+| **Primary Tools Used**             | Exchange Admin Center (Web GUI)       | Exchange Management Shell (PowerShell)    | Exchange Recipient Management PowerShell Module |
+| **Prerequisites**                  | - Access to EAC<br>- Admin permissions<br>- Hybrid setup with Exchange Online | - EMS installed<br>- Admin permissions<br>- Hybrid setup with Exchange Online | - Exchange Recipient Management tools installed<br>- Exchange schema extended in AD<br>- No on-premises Exchange server required |
+| **Administrative Skill Level**     | Beginner to Intermediate              | Intermediate to Advanced                  | Intermediate to Advanced |
+| **Permissions Required**           | - On-premises: Recipient Management Role<br>- Cloud: User Administrator, Exchange Administrator | - On-premises: Recipient Management Role<br>- Cloud: User Administrator, Exchange Administrator | - On-premises AD permissions<br>- Cloud: User Administrator, Exchange Administrator |
+| **Ease of Use**                    | User-friendly interface               | Requires knowledge of PowerShell commands | Requires knowledge of PowerShell; no GUI |
+| **Capabilities**                   | - Full recipient management<br>- GUI-based management<br>- Onboarding/offboarding | - Advanced management tasks<br>- Scripting and automation<br>- Onboarding/offboarding | - Manage recipients without on-premises Exchange server<br>- Onboarding/offboarding<br>- Decommission on-premises Exchange server |
+| **Limitations**                    | - Less suitable for automation<br>- GUI may be slower for bulk operations | - Requires PowerShell expertise<br>- On-premises Exchange server must be maintained | - Requires PowerShell expertise<br>- Limited to recipient management<br>- Some Exchange features unavailable without on-premises server |
+| **Use Cases**                      | - Small to medium organizations<br>- Administrators preferring GUI<br>- Regular recipient management | - Automation and scripting<br>- Bulk operations<br>- Advanced configuration | - Organizations migrating fully to Exchange Online<br>- Decommissioning on-premises Exchange servers<br>- Minimizing infrastructure |
+| **Best For**                       | - GUI-based management needs<br>- Less frequent changes<br>- Simpler environments | - Complex environments<br>- Need for automation<br>- Experienced admins | - Reducing on-premises footprint<br>- Post-migration management<br>- Maintaining AD as source of authority |
+| **Decommission On-Premises Exchange Server** | No                                | No                                        | Yes |
+| **Hybrid Exchange Writeback Recommended** | Yes                               | Yes                                       | Yes |
+| **Example Commands/Actions**       | - Create mailbox via GUI<br>- Convert mailbox to shared via GUI | - `New-RemoteMailbox`<br>- `Set-Mailbox`<br>- PowerShell scripts | - `Enable-RemoteMailbox`<br>- `Set-RemoteMailbox`<br>- Manage via AD and sync |
+| **Management Interface**           | Web browser (EAC URL)                 | Exchange Management Shell (EMS)           | PowerShell on management workstation |
+| **Dependency on On-Premises Exchange Server** | Yes                               | Yes                                       | No |
+| **Notes**                          | - Simplifies basic tasks<br>- Less flexible for bulk changes | - More control and flexibility<br>- Suitable for automation | - Requires Exchange schema in AD<br>- Ideal for post-migration scenarios |
+
+
+
 **IT Guide: Managing Exchange Attributes and Remote User Mailboxes**
 
 # RBAC Roles and Permissions Required
@@ -504,7 +527,7 @@ Deploying Exchange Server 2019 on Windows Server Core 2019 or 2022 is a strategi
 
 This section provides step-by-step instructions for onboarding and offboarding users using the **Exchange Admin Center (EAC)** in a hybrid Exchange environment.
 
-**Onboarding Users with Exchange Admin Center**
+**## Onboarding Users with Exchange Admin Center**
 
 **Prerequisites:**
 
