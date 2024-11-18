@@ -567,9 +567,9 @@ This section provides step-by-step instructions for onboarding and offboarding u
 2. **Open Exchange Management Shell (EMS):**
 
    - Launch **Exchange Management Shell** or **Windows PowerShell** as an administrator.
-   - Import the **Exchange Recipient Management** module if not loaded automatically.
+   - Import the **Exchange Recipient Management** snap-in
      ```powershell
-     Import-Module ExchangeRecipientManagement
+     Run this https://github.com/aollivierre/Exchange/blob/main/Exchange2/1014/Exchange/1-Copy-Profile-PS5.ps1
      ```
 
 3. **Create a New User in Active Directory:**
