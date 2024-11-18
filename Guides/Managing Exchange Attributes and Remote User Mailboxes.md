@@ -447,7 +447,7 @@ In a hybrid Exchange environment, it's recommended to enable **Exchange Hybrid w
 > 🔔 **Note:** If you have Azure AD Premium P1 (Entra ID P1) licenses, enabling all write-back features in Azure AD Connect Sync (traditional sync produc) towards the very end of the configuratrion wizard is a smart move in most hybrid environments.
 
 
-**Benefits of Enabling Exchange Hybrid Writeback**
+## Benefits of Enabling Exchange Hybrid Writeback**
 
 - **Attribute Consistency:** Ensures that changes made to mailboxes in Exchange Online are reflected in your on-premises AD. This includes attributes like proxy addresses and mail routing settings, which are crucial for proper email flow and user management.
 - **Source of Authority Maintenance:** Keeps your on-premises AD as the authoritative source for directory information, which is essential for hybrid deployments.
