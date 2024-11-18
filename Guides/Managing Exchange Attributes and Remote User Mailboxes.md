@@ -1052,15 +1052,13 @@ Set-Mailbox "<john.doe@yourdomain.com>" -RetentionPolicy "Default MRM Policy" -E
 
 
 
-  Yes, you are correct. Using the **Exchange Recipient Management** tools allows IT administrators to manage Exchange recipient objects without the need to maintain an on-premises Exchange mailbox server. This approach enables you to decommission the last on-premises Exchange mailbox server while still retaining the ability to manage mailboxes and recipient attributes in a hybrid environment.
+Using the **Exchange Recipient Management** tools allows IT administrators to manage Exchange recipient objects without the need to maintain an on-premises Exchange mailbox server. This approach enables you to decommission the last on-premises Exchange mailbox server while still retaining the ability to manage mailboxes and recipient attributes in a hybrid environment.
 
 The **Exchange Recipient Management PowerShell module** provides the necessary cmdlets to perform recipient management tasks directly against your on-premises Active Directory (AD). These changes are then synchronized to Entra ID (formerly Azure AD) using Entra ID Connect Sync, ensuring that your Exchange Online environment reflects the updates.
 
 By utilizing this method, organizations can simplify their infrastructure by removing the dependency on on-premises Exchange servers for recipient management, provided that all mailboxes have been migrated to Exchange Online.
 
 ---
-
-Let's proceed to **Option 3**, where we'll detail the steps for onboarding and offboarding users using the **Exchange Recipient Management PowerShell module**.
 
 # Option 3: Using the Exchange Recipient Management PowerShell Module
 
