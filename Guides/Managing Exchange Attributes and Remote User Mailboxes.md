@@ -82,7 +82,7 @@ This cheat sheet provides a concise overview of the three options for onboarding
 
 2. **Create Remote Mailbox**:
    - Go to **Recipients** > **Mailboxes**.
-   - Click **Add** (➕) > **Remote Mailbox** > **User Mailbox**.
+   - Click **Add** (➕) > **Office 365 Mailbox**.
    - Enter user details and set a temporary password.
 
 3. **Save and Synchronize**:
