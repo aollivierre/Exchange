@@ -1052,6 +1052,289 @@ Set-Mailbox "<john.doe@yourdomain.com>" -RetentionPolicy "Default MRM Policy" -E
 
 
 
+
+## Offboarding Users with Exchange Management Shell
+
+This section provides detailed steps for offboarding users using the **Exchange Management Shell (EMS)** in a hybrid Exchange environment. Offboarding involves disabling the user account, managing mailbox data, and ensuring compliance with data retention policies.
+
+**Prerequisites:**
+
+- Administrative permissions on both on-premises Exchange and Exchange Online.
+  - Follow the same RBAC requirements mentioned in the [RBAC Roles and Permissions Required](#rbac-roles-and-permissions-required) section.
+- Exchange Management Shell is installed and accessible.
+- Understanding of company policies regarding data retention and user account deletion.
+- Ensure that a cloud backup solution (e.g., Datto SaaS Protection) is in place to back up mailbox and OneDrive data before proceeding.
+
+**Steps:**
+
+1. **Open Exchange Management Shell:**
+
+   - Log in to your on-premises Exchange server or a workstation with the Exchange management tools installed.
+   - Open the **Exchange Management Shell** as an administrator.
+
+2. **Convert the Mailbox to a Shared Mailbox:**
+
+   - **Connect to Exchange Online PowerShell:**
+
+     ```powershell
+     Import-Module ExchangeOnlineManagement
+     Connect-ExchangeOnline -UserPrincipalName admin@yourdomain.com
+     ```
+
+     - Replace `admin@yourdomain.com` with your administrator account.
+     - Ensure you have the necessary permissions in Exchange Online.
+
+   - **Convert the User's Mailbox:**
+
+     ```powershell
+     Set-Mailbox -Identity "john.doe@yourdomain.com" -Type Shared
+     ```
+
+     - Replace `"john.doe@yourdomain.com"` with the user's actual email address.
+     - **Note:** Converting the mailbox to a shared mailbox retains the mailbox data without requiring an active license.
+
+3. **Remove Licenses in Microsoft 365:**
+
+   - **Log in to the Microsoft 365 Admin Center:**
+
+     - Navigate to `https://admin.microsoft.com` and sign in with your administrative credentials.
+
+   - **Unassign Licenses:**
+
+     - Go to **Users** > **Active users**.
+     - Select the user you are offboarding.
+     - Click on **Licenses and Apps**.
+     - Uncheck the licenses assigned to the user, especially the **Exchange Online** license.
+     - Click **Save changes**.
+     - **Note:** Removing the license after converting to a shared mailbox ensures that mailbox data is retained without incurring license costs.
+
+4. **Manage OneDrive Data:**
+
+   - **Access OneDrive Settings:**
+
+     - While still in the **Microsoft 365 Admin Center**, select the user and click on **OneDrive**.
+
+   - **Transfer Ownership or Set Retention Policies:**
+
+     - **Create an Access Link:**
+
+       - Click **Create link to files** to generate a direct link to the user's OneDrive files.
+
+     - **Assign a Manager:**
+
+       - Under **Get access to files**, enter the name of the manager or designated user who should have access to the OneDrive data.
+
+     - **Configure OneDrive Retention Settings:**
+
+       - Go to the **SharePoint Admin Center**.
+       - Under **Retention**, set the retention period for OneDrive data (up to a maximum of 3,650 days).
+       - **Note:** Proper retention settings ensure compliance with data preservation policies.
+
+5. **Backup Data (Recommended):**
+
+   - **Use a Cloud Backup Solution:**
+
+     - Before proceeding further, back up the user's mailbox and OneDrive data using your cloud backup solution (e.g., Datto SaaS Protection).
+     - This provides an extra layer of protection against data loss and supports compliance requirements.
+
+6. **Disable the User Account in Active Directory:**
+
+   - **Disable the Account:**
+
+     - Open **Active Directory Users and Computers** on your on-premises server.
+     - Locate the user account.
+     - Right-click on the user and select **Disable Account**.
+     - **Note:** Disabling the account prevents the user from accessing on-premises resources.
+
+   - **Ensure Synchronization with Entra ID:**
+
+     - Entra ID Connect Sync (formerly Azure AD Connect Sync) will synchronize the change to Entra ID.
+     - To force immediate synchronization, run the following command on the server running Entra ID Connect Sync:
+
+       ```powershell
+       Start-ADSyncSyncCycle -PolicyType Delta
+       ```
+
+7. **Block Sign-In and Revoke Authentication Tokens:**
+
+   - **Block Sign-In:**
+
+     - In the **Microsoft 365 Admin Center**, navigate to **Users** > **Active users**.
+     - Select the user account.
+     - Toggle **Block sign-in** to **On**.
+     - Click **Save changes**.
+     - **Note:** Blocking sign-in prevents the user from accessing Microsoft 365 services.
+
+   - **Revoke Authentication Tokens:**
+
+     - **Using Entra ID PowerShell:**
+
+       - **Connect to Entra ID PowerShell:**
+
+         ```powershell
+         Connect-MgGraph -Scopes "User.ReadWrite.All"
+         ```
+
+         - Sign in with your administrative credentials when prompted.
+
+       - **Revoke User Sessions:**
+
+         ```powershell
+         Revoke-MgUserSignInSession -UserId "john.doe@yourdomain.com"
+         ```
+
+     - **Alternatively, Using the Entra ID Admin Center:**
+
+       - Navigate to the **Entra ID Admin Center** (`https://entra.microsoft.com`).
+       - Go to **Users** > **All users**.
+       - Select the user, then click on **Authentication methods**.
+       - Click **Require re-register multifactor authentication**.
+       - Under **Devices**, click **Revoke sessions**.
+
+8. **(Optional) Remove the User from Entra ID Connect Sync Scope:**
+
+   - **Exclude the User from Synchronization:**
+
+     - Modify the synchronization rules or organizational units (OUs) in Entra ID Connect Sync to exclude the user.
+     - This will cause the user to be deleted from Entra ID on the next sync cycle.
+
+   - **Force Synchronization:**
+
+     ```powershell
+     Start-ADSyncSyncCycle -PolicyType Delta
+     ```
+
+   - **Restore the User as a Cloud-Only Account (If Necessary):**
+
+     - Navigate to the **Entra ID Admin Center** > **Users** > **Deleted users**.
+     - Select the user and click **Restore**.
+     - The user becomes a cloud-only account.
+
+   - **Run the User Deletion Wizard:**
+
+     - In the **Microsoft 365 Admin Center**, delete the user using the **Delete user** option.
+     - This process converts the mailbox to a shared mailbox automatically and allows you to assign OneDrive data to another user.
+
+   - **Note:** This alternative method automates several steps but requires careful handling to avoid unintended data loss.
+
+9. **Verify Offboarding Completion:**
+
+   - **Mailboxes:**
+
+     - Confirm that the user's mailbox is now a shared mailbox in Exchange Online.
+     - Ensure that other users who need access have the appropriate permissions.
+
+   - **Licenses:**
+
+     - Verify that all licenses have been unassigned from the user account.
+
+   - **User Account:**
+
+     - Ensure the user account is disabled in Active Directory and blocked in Entra ID.
+
+   - **Data Access:**
+
+     - Check that OneDrive data has been transferred or is accessible as per your organization's policies.
+
+   - **Security:**
+
+     - Confirm that all authentication sessions have been revoked and that the user cannot access any company resources.
+
+**Important Considerations:**
+
+- **Data Retention Compliance:**
+
+  - Always adhere to your organization's data retention policies.
+  - Converting the mailbox to a shared mailbox retains email data without needing a license.
+  - OneDrive data retention must be managed separately through SharePoint Online settings.
+
+- **License Considerations:**
+
+  - Shared mailboxes with over 50 GB of data or with In-Place Archive enabled require a license.
+  - Ensure compliance with Microsoft licensing requirements.
+
+- **Security Measures:**
+
+  - Promptly blocking sign-in and revoking sessions helps prevent unauthorized access.
+  - Regularly review access logs for any suspicious activity.
+
+- **Cloud Backup Solutions:**
+
+  - Utilizing cloud-to-cloud backup solutions ensures that you have a secure backup of all user data before making any changes.
+  - This is especially important if legal holds or compliance requirements mandate data preservation.
+
+- **Disabling vs. Deleting Accounts:**
+
+  - Disabling the user account in Active Directory prevents access but retains the account for any necessary data retrieval.
+  - Deleting the account is irreversible and should only be done if you're certain that all data is no longer needed.
+
+- **Disconnecting Mailbox in Exchange On-Premises:**
+
+  - In a hybrid environment, it's generally not necessary to disable or disconnect the mailbox in on-premises Exchange after converting it to a shared mailbox in Exchange Online.
+  - The shared mailbox resides in Exchange Online, and the on-premises user account can remain disabled.
+
+- **Alternative Offboarding Method:**
+
+  - The alternative method of removing the user from the sync scope and restoring them as a cloud-only user may simplify the process but requires careful handling to avoid unintended data loss.
+  - Evaluate this option based on your organization's policies and the specific circumstances.
+
+**Notes:**
+
+- **RBAC Roles:**
+
+  - On-premises Exchange: Membership in the **Recipient Management** role group is required.
+  - Exchange Online: Ensure you have the **Exchange Administrator** role to convert mailboxes.
+
+- **PowerShell Modules:**
+
+  - Ensure you have the **ExchangeOnlineManagement** and **AzureAD** (or **Microsoft Graph PowerShell**) modules installed and updated.
+
+- **Communication:**
+
+  - Notify relevant stakeholders (e.g., managers, HR) about the offboarding to coordinate related processes.
+
+- **Audit and Compliance:**
+
+  - Document all actions taken during the offboarding process.
+  - Maintain records for compliance and auditing purposes.
+
+**Summary of Commands:**
+
+- **Convert Mailbox to Shared:**
+
+  ```powershell
+  Set-Mailbox -Identity "john.doe@yourdomain.com" -Type Shared
+  ```
+
+- **Disable AD Account:**
+
+  ```powershell
+  Disable-ADAccount -Identity "john.doe@yourdomain.com"
+  ```
+
+- **Force Entra ID Connect Sync:**
+
+  ```powershell
+  Start-ADSyncSyncCycle -PolicyType Delta
+  ```
+
+- **Revoke User Sessions:**
+
+  ```powershell
+  Connect-MgGraph -Scopes "User.ReadWrite.All"
+  Revoke-MgUserSignInSession -UserId "john.doe@yourdomain.com"
+  ```
+
+**Conclusion:**
+
+By following these steps, you can effectively offboard users using the Exchange Management Shell in a hybrid Exchange environment. This process ensures that you comply with data retention policies, maintain security, and properly manage user data during offboarding.
+
+---
+
+
+
+
+
 Using the **Exchange Recipient Management** tools allows IT administrators to manage Exchange recipient objects without the need to maintain an on-premises Exchange mailbox server. This approach enables you to decommission the last on-premises Exchange mailbox server while still retaining the ability to manage mailboxes and recipient attributes in a hybrid environment.
 
 The **Exchange Recipient Management PowerShell module** provides the necessary cmdlets to perform recipient management tasks directly against your on-premises Active Directory (AD). These changes are then synchronized to Entra ID (formerly Azure AD) using Entra ID Connect Sync, ensuring that your Exchange Online environment reflects the updates.
