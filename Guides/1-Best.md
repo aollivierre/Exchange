@@ -505,3 +505,271 @@ Set-Mailbox "<john.doe@yourdomain.com>" -RetentionPolicy "Default MRM Policy" -E
 - **License Assignment:**
   - Users without a license cannot access their mailboxes in Exchange Online.
   - License assignment must be completed promptly after synchronization.
+
+
+
+  Yes, you are correct. Using the **Exchange Recipient Management** tools allows IT administrators to manage Exchange recipient objects without the need to maintain an on-premises Exchange mailbox server. This approach enables you to decommission the last on-premises Exchange mailbox server while still retaining the ability to manage mailboxes and recipient attributes in a hybrid environment.
+
+The **Exchange Recipient Management PowerShell module** provides the necessary cmdlets to perform recipient management tasks directly against your on-premises Active Directory (AD). These changes are then synchronized to Entra ID (formerly Azure AD) using Entra ID Connect Sync, ensuring that your Exchange Online environment reflects the updates.
+
+By utilizing this method, organizations can simplify their infrastructure by removing the dependency on on-premises Exchange servers for recipient management, provided that all mailboxes have been migrated to Exchange Online.
+
+---
+
+Let's proceed to **Option 3**, where we'll detail the steps for onboarding and offboarding users using the **Exchange Recipient Management PowerShell module**.
+
+# Option 3: Using the Exchange Recipient Management PowerShell Module
+
+This section provides step-by-step instructions for onboarding and offboarding users using the **Exchange Recipient Management PowerShell module** in a hybrid Exchange environment without an on-premises Exchange mailbox server.
+
+## Overview
+
+- **Purpose:** Allows management of Exchange-related attributes in on-premises AD without maintaining an on-premises Exchange server.
+- **Benefits:**
+  - Decommission the last on-premises Exchange mailbox server.
+  - Reduce infrastructure complexity and costs.
+  - Maintain control over recipient management in a hybrid environment.
+
+## Prerequisites
+
+- **Environment Requirements:**
+  - All mailboxes have been migrated to Exchange Online.
+  - Entra ID Connect Sync is configured and operational.
+  - Exchange schema extensions are present in on-premises AD.
+- **Administrative Permissions:**
+  - Permissions to modify user objects in on-premises AD.
+  - Appropriate roles assigned in Entra ID and Exchange Online (as per the RBAC roles section).
+- **Tools Required:**
+  - **Exchange Recipient Management PowerShell module** installed on a management workstation or server.
+  - **PowerShell** with the Active Directory module.
+  - **Entra ID Connect Sync** (formerly Azure AD Connect Sync) to synchronize changes to Entra ID.
+
+---
+
+## Onboarding Users with Exchange Recipient Management PowerShell Module
+
+**Steps:**
+
+1. **Install the Exchange Recipient Management Tools:**
+
+   - **Download the Exchange Management Tools:**
+     - Obtain the latest version of the **Exchange Server 2019 Setup** files from Microsoft's official site.
+     - **Note:** You don't need to install Exchange Server; you'll extract and install only the management tools.
+
+   - **Extract and Install Management Tools:**
+     - Run the Exchange Server setup with the `/IAcceptExchangeServerLicenseTerms` and `/InstallManagementTools` switches.
+       ```powershell
+       Setup.exe /IAcceptExchangeServerLicenseTerms /InstallManagementTools
+       ```
+     - This installs the necessary PowerShell modules and prerequisites for recipient management.
+
+2. **Open Exchange Management Shell (EMS):**
+
+   - Launch **Exchange Management Shell** or **Windows PowerShell** as an administrator.
+   - Import the **Exchange Recipient Management** module if not loaded automatically.
+     ```powershell
+     Import-Module ExchangeRecipientManagement
+     ```
+
+3. **Create a New User in Active Directory:**
+
+   - Use the **Active Directory Users and Computers (ADUC)** console or PowerShell to create a new AD user.
+     ```powershell
+     New-ADUser -Name "John Doe" -GivenName "John" -Surname "Doe" -SamAccountName "jdoe" -UserPrincipalName "john.doe@yourdomain.com" -AccountPassword (Read-Host -AsSecureString "Enter Password") -Enabled $true
+     ```
+     - Replace the placeholders with the user's actual information.
+
+4. **Mail-Enable the User:**
+
+   - Use the `Enable-RemoteMailbox` cmdlet to mail-enable the user and associate the mailbox with Exchange Online.
+     ```powershell
+     Enable-RemoteMailbox -Identity "john.doe@yourdomain.com" -RemoteRoutingAddress "john.doe@yourdomain.mail.onmicrosoft.com"
+     ```
+     - The `RemoteRoutingAddress` is typically the user's UPN with the `.mail.onmicrosoft.com` domain suffix.
+
+5. **Configure Additional Mailbox Properties (Optional):**
+
+   - Set additional Exchange attributes as needed.
+     ```powershell
+     Set-RemoteMailbox -Identity "john.doe@yourdomain.com" -Alias "jdoe" -DisplayName "John Doe" -PrimarySmtpAddress "john.doe@yourdomain.com"
+     ```
+
+6. **Force Entra ID Connect Sync Synchronization:**
+
+   - On the server running Entra ID Connect Sync, force a synchronization to ensure changes are synced promptly.
+     ```powershell
+     Start-ADSyncSyncCycle -PolicyType Delta
+     ```
+
+7. **Assign a License in Microsoft 365:**
+
+   - Log in to the **Microsoft 365 Admin Center** (`https://admin.microsoft.com`).
+   - Navigate to **Users** > **Active users**.
+   - Locate and select the new user.
+   - Click on **Licenses and Apps**.
+   - Assign the appropriate license (e.g., **Office 365 E3**, **Exchange Online Plan 1**) and click **Save changes**.
+
+8. **Inform the User:**
+
+   - Provide the user with their account details and temporary password.
+   - Instruct them to log in and change their password as soon as possible.
+
+9. **Test the Mailbox:**
+
+   - Verify that the mailbox is functioning correctly.
+   - Send a test email to and from the mailbox.
+
+**Notes:**
+
+- **Exchange Schema Extensions:**
+  - The on-premises AD must have the Exchange schema extensions, which are present if Exchange was previously installed.
+  - If not present, you need to prepare the AD schema using the Exchange setup with the `/PrepareSchema` switch.
+    ```powershell
+    Setup.exe /PrepareSchema /IAcceptExchangeServerLicenseTerms
+    ```
+
+- **RBAC Roles:**
+  - Ensure that your account has sufficient permissions to modify AD user objects and Exchange attributes.
+  - Typically, membership in the **Account Operators** or a custom group with delegated permissions is required.
+
+- **PowerShell Modules:**
+  - The **Active Directory** module is required to manage AD user accounts.
+  - The **Exchange Recipient Management** module provides the necessary cmdlets for Exchange attribute management.
+
+---
+
+## Offboarding Users with Exchange Recipient Management PowerShell Module
+
+**Steps:**
+
+1. **Disable the User Account in Active Directory:**
+
+   - Disable the user's AD account to prevent further access.
+     ```powershell
+     Disable-ADAccount -Identity "john.doe@yourdomain.com"
+     ```
+
+2. **Convert the Mailbox to a Shared Mailbox (Optional):**
+
+   - If you need to retain access to the user's mailbox data without a license, convert it to a shared mailbox.
+   - **Connect to Exchange Online PowerShell:**
+     ```powershell
+     Import-Module ExchangeOnlineManagement
+     Connect-ExchangeOnline -UserPrincipalName admin@yourdomain.com
+     ```
+   - **Convert the Mailbox:**
+     ```powershell
+     Set-Mailbox -Identity "john.doe@yourdomain.com" -Type Shared
+     ```
+     - **Note:** Converting to a shared mailbox must be done in Exchange Online.
+
+3. **Remove Licenses in Microsoft 365:**
+
+   - In the **Microsoft 365 Admin Center**, navigate to **Users** > **Active users**.
+   - Select the user and go to **Licenses and Apps**.
+   - Unassign all licenses from the user and click **Save changes**.
+
+4. **Manage OneDrive Data:**
+
+   - Transfer ownership of the user's OneDrive data if required.
+     - In the **Microsoft 365 Admin Center**, select the user and click on **OneDrive**.
+     - **Create an access link** or assign a manager to receive the user's OneDrive files.
+     - Configure retention settings as per your organization's policies.
+
+5. **Revoke Access and Authentication Tokens:**
+
+   - **Block Sign-In:**
+     - In the **Microsoft 365 Admin Center**, toggle **Block sign-in** to **On** for the user.
+   - **Revoke Sessions:**
+     - Use Entra ID PowerShell or the Entra ID Admin Center to revoke user sessions and reset authentication methods.
+     ```powershell
+     # Connect to Entra ID
+     Connect-MgGraph -Scopes User.ReadWrite.All
+     # Revoke sessions
+     Revoke-MgUserSignInSession -UserId "john.doe@yourdomain.com"
+     ```
+
+6. **Backup Data (Recommended):**
+
+   - Ensure that mailbox and OneDrive data are backed up using a cloud-to-cloud backup solution (e.g., Datto SaaS Protection).
+
+7. **Force Entra ID Connect Sync Synchronization:**
+
+   - On the server running Entra ID Connect Sync, force a synchronization to update the user's status in Entra ID.
+     ```powershell
+     Start-ADSyncSyncCycle -PolicyType Delta
+     ```
+
+8. **Verify Offboarding Completion:**
+
+   - Confirm that the user's mailbox is converted to a shared mailbox and accessible as needed.
+   - Ensure the user's account is disabled and that licenses have been removed.
+   - Verify that OneDrive data has been managed according to policy.
+   - Check that the user can no longer access company resources.
+
+**Notes:**
+
+- **Data Retention Policies:**
+  - Always follow your organization's data retention and compliance policies when offboarding users.
+  - Converting to a shared mailbox retains email data without requiring a license.
+
+- **License Considerations:**
+  - Shared mailboxes with over 50 GB of data or with In-Place Archive enabled require a license.
+  - Ensure compliance with Microsoft licensing requirements.
+
+- **Security Measures:**
+  - Promptly blocking sign-in and revoking sessions helps prevent unauthorized access.
+  - Regularly review access logs for any suspicious activity.
+
+---
+
+## Important Considerations
+
+- **Decommissioning the Last On-Premises Exchange Server:**
+
+  - **Recipient Management Tools Sufficiency:**
+    - With the Exchange Recipient Management tools, you can manage recipients without an on-premises Exchange server.
+    - This allows you to decommission the last Exchange mailbox server, reducing maintenance overhead.
+
+  - **Schema and Attribute Management:**
+    - The Exchange schema extensions must remain in AD.
+    - Recipient attributes are still stored in AD and synchronized to Entra ID.
+
+- **Entra ID Connect Sync:**
+
+  - **Role of Entra ID Connect Sync:**
+    - Continues to synchronize on-premises AD with Entra ID.
+    - Must remain operational to sync changes made via the Recipient Management tools.
+
+  - **Hybrid Writeback:**
+    - Ensure that **Exchange Hybrid writeback** is enabled to maintain attribute consistency if required.
+
+- **Administrative Permissions:**
+
+  - **On-Premises AD:**
+    - Permissions to modify user objects and Exchange attributes are necessary.
+    - Delegate permissions appropriately to adhere to the principle of least privilege.
+
+  - **Exchange Online:**
+    - Administrative roles in Entra ID and Exchange Online are required for tasks like converting mailboxes to shared mailboxes.
+
+- **Backup and Recovery:**
+
+  - **Data Protection:**
+    - Implement a robust backup solution for cloud data.
+    - Regularly test backups to ensure data can be restored when needed.
+
+- **Compliance and Auditing:**
+
+  - **Logging Changes:**
+    - Keep records of administrative actions for auditing purposes.
+    - Utilize tools like the **Unified Audit Log** in Microsoft 365.
+
+- **Support and Updates:**
+
+  - **Staying Informed:**
+    - Keep abreast of updates from Microsoft regarding hybrid environments and management tools.
+    - Ensure that management workstations have the latest tools and updates installed.
+
+---
+
