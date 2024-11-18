@@ -1,16 +1,228 @@
-Contents
+Certainly! Here's the updated **Table of Contents** with proper formatting, including **Option 3**. I'll also show you how to fix the references inside the article.
 
-[RBAC Roles and Permissions Required 2](#_Toc182559512)
+---
 
-[Best Practices for Administrative Accounts 5](#_Toc182559513)
+# Table of Contents
 
-[Enabling Exchange Hybrid Writeback in Entra ID Connect Sync 7](#_Toc182559514)
+1. [RBAC Roles and Permissions Required](#rbac-roles-and-permissions-required)
+2. [Best Practices for Administrative Accounts](#best-practices-for-administrative-accounts)
+3. [Enabling Exchange Hybrid Writeback in Entra ID Connect Sync](#enabling-exchange-hybrid-writeback-in-entra-id-connect-sync)
+4. [Option 1: Using the Exchange Admin Center](#option-1-using-the-exchange-admin-center)
+   - [Offboarding Users with Exchange Admin Center](#offboarding-users-with-exchange-admin-center)
+5. [Option 2: Using the Exchange Management Shell](#option-2-using-the-exchange-management-shell)
+6. [Option 3: Using the Exchange Recipient Management PowerShell Module](#option-3-using-the-exchange-recipient-management-powershell-module)
+7. [Installing Exchange Server 2019 on Windows Server Core 2019/2022](#installing-exchange-server-2019-on-windows-server-core-20192022)
 
-[Option 1: Using the Exchange Admin Center 10](#_Toc182559515)
+---
 
-[Offboarding Users with Exchange Admin Center 13](#_Toc182559516)
+## How to Fix the References Inside the Article
 
-[Option 2: Using the Exchange Management Shell 21](#_Toc182559517)
+To ensure that the Table of Contents (TOC) links correctly to each section in your article, follow these steps:
+
+### 1. Use Consistent Heading Levels
+
+Ensure that your article uses consistent heading levels throughout. In Markdown:
+
+- `#` is for the main title.
+- `##` for main sections.
+- `###` for subsections.
+- `####` for sub-subsections.
+
+### 2. Correctly Format Headings
+
+Make sure all your headings are properly formatted. For example:
+
+```markdown
+## RBAC Roles and Permissions Required
+
+### On-Premises Active Directory and Exchange Server
+```
+
+### 3. Understand How Markdown Generates Anchors
+
+Markdown automatically generates anchors for headings based on their text. The rules are:
+
+- Convert the heading text to lowercase.
+- Remove any punctuation marks.
+- Replace spaces with hyphens (`-`).
+
+**Example:**
+
+- Heading: `## Best Practices for Administrative Accounts`
+- Anchor: `#best-practices-for-administrative-accounts`
+
+### 4. Update the Table of Contents Links
+
+Use the generated anchors in your TOC links.
+
+**Example:**
+
+```markdown
+[Best Practices for Administrative Accounts](#best-practices-for-administrative-accounts)
+```
+
+### 5. Add Option 3 to the Table of Contents
+
+Include **Option 3** in your TOC with the correct anchor:
+
+```markdown
+[Option 3: Using the Exchange Recipient Management PowerShell Module](#option-3-using-the-exchange-recipient-management-powershell-module)
+```
+
+### 6. Fix Internal References Within the Article
+
+When referring to other sections within the article, use the same anchor format.
+
+**Example:**
+
+```markdown
+For more details, see the [RBAC Roles and Permissions Required](#rbac-roles-and-permissions-required) section.
+```
+
+### 7. Example of a Fixed Section Reference
+
+In your **Onboarding Users with Exchange Management Shell** section:
+
+```markdown
+**Prerequisites:**
+
+- Administrative permissions on the on-premises Exchange server.
+  - Follow the RBAC requirements mentioned in the [RBAC Roles and Permissions Required](#rbac-roles-and-permissions-required) section.
+```
+
+---
+
+## Full Corrected Table of Contents with Option 3
+
+Here's the full TOC with proper formatting and Option 3 included:
+
+1. [RBAC Roles and Permissions Required](#rbac-roles-and-permissions-required)
+   - [On-Premises Active Directory and Exchange Server](#on-premises-active-directory-and-exchange-server)
+   - [Entra ID (Formerly Azure Active Directory) and Exchange Online](#entra-id-formerly-azure-active-directory-and-exchange-online)
+   - [Entra ID Connect Sync (Formerly Azure AD Connect Sync)](#entra-id-connect-sync-formerly-azure-ad-connect-sync)
+   - [Important Considerations](#important-considerations)
+2. [Best Practices for Administrative Accounts](#best-practices-for-administrative-accounts)
+   - [Separate On-Premises and Cloud-Only Admin Accounts](#separate-on-premises-and-cloud-only-admin-accounts)
+   - [Implement Multi-Factor Authentication (MFA)](#implement-multi-factor-authentication-mfa)
+   - [Principle of Least Privilege](#principle-of-least-privilege)
+   - [Use Privileged Access Workstations (PAWs)](#use-privileged-access-workstations-paws)
+3. [Enabling Exchange Hybrid Writeback in Entra ID Connect Sync](#enabling-exchange-hybrid-writeback-in-entra-id-connect-sync)
+   - [Benefits of Enabling Exchange Hybrid Writeback](#benefits-of-enabling-exchange-hybrid-writeback)
+   - [How to Enable Exchange Hybrid Writeback](#how-to-enable-exchange-hybrid-writeback)
+   - [Important Considerations](#important-considerations-1)
+   - [Why Exchange Hybrid Writeback is Recommended](#why-exchange-hybrid-writeback-is-recommended)
+4. [Option 1: Using the Exchange Admin Center](#option-1-using-the-exchange-admin-center)
+   - [Onboarding Users with Exchange Admin Center](#onboarding-users-with-exchange-admin-center)
+   - [Offboarding Users with Exchange Admin Center](#offboarding-users-with-exchange-admin-center)
+5. [Option 2: Using the Exchange Management Shell](#option-2-using-the-exchange-management-shell)
+   - [Onboarding Users with Exchange Management Shell](#onboarding-users-with-exchange-management-shell)
+   - [Offboarding Users with Exchange Management Shell](#offboarding-users-with-exchange-management-shell)
+6. [Option 3: Using the Exchange Recipient Management PowerShell Module](#option-3-using-the-exchange-recipient-management-powershell-module)
+   - [Onboarding Users with Exchange Recipient Management PowerShell Module](#onboarding-users-with-exchange-recipient-management-powershell-module)
+   - [Offboarding Users with Exchange Recipient Management PowerShell Module](#offboarding-users-with-exchange-recipient-management-powershell-module)
+   - [Important Considerations](#important-considerations-2)
+7. [Installing Exchange Server 2019 on Windows Server Core 2019/2022](#installing-exchange-server-2019-on-windows-server-core-20192022)
+   - [Overview](#overview)
+   - [Operating System Requirements](#operating-system-requirements)
+   - [Benefits of Using Server Core](#benefits-of-using-server-core)
+   - [Installation Steps](#installation-steps)
+   - [Managing Exchange Server on Server Core](#managing-exchange-server-on-server-core)
+   - [Recommended Approach Over Server with Desktop Experience](#recommended-approach-over-server-with-desktop-experience)
+   - [Important Considerations](#important-considerations-3)
+   - [Conclusion](#conclusion)
+
+---
+
+## Tips for Maintaining References
+
+- **Use Descriptive Headings:** Make sure your headings are clear and descriptive to make navigation easier.
+
+- **Check Anchors After Changes:** If you edit a heading, remember to update the corresponding anchor in the TOC and any internal references.
+
+- **Use TOC Generation Tools:** Consider using a Markdown editor or extension that can automatically generate and update your TOC based on the headings in your document. Examples include:
+
+  - **Visual Studio Code** with the **Markdown All in One** extension.
+  - **Typora** or **Obsidian** editors.
+
+- **Consistent Formatting:** Stick to a consistent style for headings and lists to ensure readability.
+
+---
+
+## How to Update References Inside the Article
+
+Here's how you can update the references within your article:
+
+1. **Identify All Internal Links:** Search for any instances where you've linked to other sections within the document.
+
+2. **Match the Anchors:** Ensure that the text inside the parentheses matches the generated anchor for the heading you're linking to.
+
+   **Example:**
+
+   - **Incorrect Link:**
+
+     ```markdown
+     See the [RBAC section](#_Toc182559512) for more information.
+     ```
+
+   - **Correct Link:**
+
+     ```markdown
+     See the [RBAC Roles and Permissions Required](#rbac-roles-and-permissions-required) section for more information.
+     ```
+
+3. **Update the Anchor Format:** Replace any auto-generated anchors like `#_Toc182559512` with the correct Markdown-generated anchor based on the heading text.
+
+4. **Test the Links:** After updating, test the links by clicking them in a Markdown preview to ensure they navigate to the correct section.
+
+---
+
+## Example of Fixing References
+
+### Before Fixing:
+
+```markdown
+[RBAC Roles and Permissions Required ](#_Toc182559512)
+
+[Best Practices for Administrative Accounts ](#_Toc182559513)
+```
+
+### After Fixing:
+
+```markdown
+[RBAC Roles and Permissions Required](#rbac-roles-and-permissions-required)
+
+[Best Practices for Administrative Accounts](#best-practices-for-administrative-accounts)
+```
+
+### Fixing In-Text References:
+
+- **Original Reference:**
+
+  ```markdown
+  For details on permissions, see the RBAC Roles and Permissions Required section.
+  ```
+
+- **Updated with Link:**
+
+  ```markdown
+  For details on permissions, see the [RBAC Roles and Permissions Required](#rbac-roles-and-permissions-required) section.
+  ```
+
+---
+
+## Final Notes
+
+By following these steps:
+
+- **Your TOC will be properly formatted and functional.**
+- **Internal references will accurately link to their respective sections.**
+- **Readers will have an improved navigation experience.**
+
+---
+
+**Do you need any further assistance or clarification on updating your document?**
+
+
 
 **IT Guide: Managing Exchange Attributes and Remote User Mailboxes**
 
@@ -227,6 +439,254 @@ In a hybrid Exchange environment, it's recommended to enable **Exchange Hybrid w
   - Enables features like cross-premises mailbox permissions and delegate access.
 - **Facilitates Future Migrations:**
   - Keeps the option open for seamless transitions, whether moving more mailboxes to the cloud or back on-premises.
+ 
+
+
+
+
+# Installing Exchange Server 2019 on Windows Server Core 2019/2022
+
+This section provides guidance on installing **Exchange Server 2019** on **Windows Server Core 2019** or **Windows Server Core 2022**. It highlights the operating system requirements, benefits of using Server Core, and management options available. Deploying Exchange Server on Server Core is recommended over the Desktop Experience version due to its reduced footprint and security advantages.
+
+## Overview
+
+- **Exchange Server 2019** supports installation on **Windows Server Core** editions.
+- **Server Core** provides a minimal installation option, reducing the server's surface area for attacks and maintenance requirements.
+- Exchange Server is primarily managed via **PowerShell** and remote management tools, making Server Core an ideal platform.
+
+## Operating System Requirements
+
+### Supported Operating Systems
+
+- **Windows Server 2019 Server Core**
+- **Windows Server 2022 Server Core**
+
+**Note:** Ensure that the latest cumulative updates for both Windows Server and Exchange Server are applied to support all features and receive security updates.
+
+### Prerequisites
+
+- **Hardware Requirements:**
+  - **Processor:** 64-bit processor with at least 2 cores.
+  - **Memory:** Minimum of 128 GB RAM (recommended for Mailbox servers).
+  - **Disk Space:** At least 30 GB free space on the installation drive, plus additional space for mailbox databases and logs.
+- **Active Directory:**
+  - Active Directory forest functional level of **Windows Server 2012 R2** or higher.
+  - At least one writable Global Catalog server in each Active Directory site where you plan to install Exchange.
+- **Networking:**
+  - Static IP address assigned to the server.
+  - Proper DNS configuration.
+
+### Software Requirements
+
+- **.NET Framework 4.8**
+- **Visual C++ Redistributable Package for Visual Studio 2012**
+- **Unified Communications Managed API (UCMA) 4.0 Runtime**
+- **Windows Features:**
+  - **Exchange Server Mailbox role:** Install required Windows features using the provided scripts or manually via PowerShell.
+
+## Benefits of Using Server Core
+
+- **Reduced Attack Surface:**
+  - Fewer installed components mean fewer vulnerabilities.
+- **Lower Maintenance:**
+  - Reduced need for updates and patches compared to the full Desktop Experience.
+- **Improved Performance:**
+  - Less resource consumption due to the absence of GUI components.
+- **Enhanced Security:**
+  - Minimalistic design limits the potential for unauthorized access.
+- **Efficiency:**
+  - Ideal for roles that do not require a GUI, such as Exchange Server, which is primarily managed via PowerShell and remote tools.
+
+## Installation Steps
+
+### Step 1: Prepare the Server
+
+1. **Install Windows Server Core:**
+   - Install either **Windows Server 2019 Server Core** or **Windows Server 2022 Server Core**.
+   - Configure the server with a static IP address and join it to the domain.
+
+2. **Update the Server:**
+   - Install the latest Windows updates.
+     ```powershell
+     sconfig
+     ```
+     - Select option **6** to download and install updates.
+
+3. **Configure Time Zone:**
+   - Set the correct time zone.
+     ```powershell
+     tzutil /s "Pacific Standard Time"
+     ```
+
+4. **Rename the Server (Optional):**
+   - Assign a meaningful name to the server.
+     ```powershell
+     Rename-Computer -NewName "EXCH2019CORE"
+     ```
+     - Reboot the server to apply changes.
+
+### Step 2: Install Required Windows Features
+
+- **Install Prerequisites Using PowerShell:**
+
+  For the **Mailbox** role, execute the following command:
+
+  ```powershell
+  Install-WindowsFeature Server-Media-Foundation, RSAT-ADDS
+  ```
+
+- **Install Other Required Components:**
+
+  - **.NET Framework 4.8:**
+    - Download and install the offline installer for .NET Framework 4.8.
+
+  - **Visual C++ Redistributable Package for Visual Studio 2012:**
+    - Download and install both **vcredist_x64.exe** and **vcredist_x86.exe**.
+
+  - **Unified Communications Managed API (UCMA) 4.0 Runtime:**
+    - Download and install **Ucmaredist.msi**.
+
+### Step 3: Prepare Active Directory
+
+1. **Extend the Schema:**
+   - Run the following command from the Exchange installation files directory:
+     ```powershell
+     Setup.exe /PrepareSchema /IAcceptExchangeServerLicenseTerms
+     ```
+
+2. **Prepare Active Directory:**
+   - Prepare the Active Directory forest:
+     ```powershell
+     Setup.exe /PrepareAD /OrganizationName:"YourOrganization" /IAcceptExchangeServerLicenseTerms
+     ```
+   - Prepare all domains:
+     ```powershell
+     Setup.exe /PrepareAllDomains /IAcceptExchangeServerLicenseTerms
+     ```
+
+### Step 4: Install Exchange Server 2019
+
+1. **Mount the Exchange Server 2019 Installation Media:**
+   - Copy the Exchange installation files to a local directory or mount the ISO.
+
+2. **Install Exchange Server Using Setup Command:**
+   - Execute the following command to install the Mailbox role:
+     ```powershell
+     Setup.exe /Mode:Install /Role:Mailbox /IAcceptExchangeServerLicenseTerms
+     ```
+
+   - **Note:** If you plan to use the Edge Transport role, it must be installed on a separate server.
+
+3. **Complete the Installation:**
+   - The setup will progress through several stages, including copying files, installing the Exchange Server roles, and configuring services.
+   - Upon completion, verify that the installation was successful.
+
+### Step 5: Apply the Latest Cumulative Update
+
+- **Download and Install Cumulative Update:**
+  - Obtain the latest cumulative update (CU) for Exchange Server 2019 from Microsoft's official website.
+  - Run the CU installer:
+    ```powershell
+    Setup.exe /Mode:Upgrade /IAcceptExchangeServerLicenseTerms
+    ```
+
+## Managing Exchange Server on Server Core
+
+With Server Core lacking a graphical user interface (GUI), management is performed using remote tools and command-line interfaces.
+
+### Windows Admin Center (WAC)
+
+- **Overview:**
+  - WAC is a browser-based management tool that provides a modern interface for managing servers.
+- **Installation:**
+  - Install WAC on a separate management server or workstation.
+- **Features:**
+  - Manage server settings, services, firewall, and performance.
+  - Access PowerShell remotely.
+- **Usage:**
+  - Connect to the Server Core instance via WAC to perform administrative tasks.
+
+### PowerShell
+
+- **Exchange Management Shell (EMS):**
+  - Use EMS for Exchange-specific management tasks.
+  - Access EMS remotely from a management workstation:
+    ```powershell
+    Enter-PSSession -ComputerName EXCH2019CORE
+    ```
+- **Remote PowerShell:**
+  - Enable PowerShell remoting on the Server Core server.
+    ```powershell
+    Enable-PSRemoting -Force
+    ```
+  - Manage the server using standard PowerShell cmdlets.
+
+### Remote Server Administration Tools (RSAT)
+
+- **Overview:**
+  - RSAT allows administrators to manage Windows Servers remotely from a Windows 10/11 workstation.
+- **Installation:**
+  - Install RSAT components via **Settings** > **Apps** > **Optional features**.
+- **Features:**
+  - Access tools like Active Directory Users and Computers, DNS management, and more.
+
+### Exchange Administration Center (EAC)
+
+- **Access via Web Browser:**
+  - The EAC is a web-based management console accessible from a remote machine.
+  - URL format:
+    ```
+    https://<ExchangeServerFQDN>/ecp
+    ```
+- **Usage:**
+  - Perform recipient management, organization configuration, and other administrative tasks.
+
+### Server Manager
+
+- **Limited Functionality:**
+  - Server Manager cannot be run locally on Server Core but can manage Server Core instances remotely.
+- **Usage:**
+  - Add the Server Core server to Server Manager on a remote workstation or server.
+  - Manage roles, features, and basic server settings.
+
+### Other Remote Management Tools
+
+- **Remote Desktop Services (RDS):**
+  - Connect via RDS for command-line access.
+- **Event Viewer:**
+  - Access logs remotely using **Event Viewer** connected to the Server Core instance.
+- **Performance Monitor:**
+  - Monitor performance counters remotely.
+
+## Recommended Approach Over Server with Desktop Experience
+
+- **Efficiency:**
+  - Server Core reduces resource consumption by eliminating unnecessary GUI components.
+- **Security:**
+  - Fewer installed features reduce the attack surface and potential vulnerabilities.
+- **Maintenance:**
+  - Decreased need for updates and patches simplifies maintenance schedules.
+- **Management Alignment:**
+  - Since Exchange Server is primarily managed via PowerShell and remote tools, the absence of a GUI does not hinder administrative tasks.
+- **Cost-Effective:**
+  - Lower resource requirements can lead to cost savings in hardware and energy consumption.
+
+## Important Considerations
+
+- **Training:**
+  - Administrators should be comfortable with command-line tools and remote management.
+- **Compatibility:**
+  - Verify that all third-party applications and monitoring tools support Server Core.
+- **Troubleshooting:**
+  - Without a GUI, troubleshooting requires familiarity with command-line diagnostics and remote tools.
+- **Backup and Recovery:**
+  - Ensure that your backup solutions support Server Core environments.
+
+## Conclusion
+
+Deploying Exchange Server 2019 on Windows Server Core 2019 or 2022 is a strategic choice that enhances security, reduces maintenance overhead, and aligns with modern management practices. By leveraging remote management tools such as Windows Admin Center, PowerShell, and RSAT, administrators can efficiently manage Exchange Server without the need for a local GUI. This approach is recommended over the traditional Desktop Experience installation, particularly in environments where server resources and security are paramount.
+
+
 
 # Option 1: Using the Exchange Admin Center
 
