@@ -708,7 +708,7 @@ Start-ADSyncSyncCycle -PolicyType Delta
 
 This section provides step-by-step instructions for onboarding and offboarding users using the **Exchange Management Shell (EMS)** in a hybrid Exchange environment.
 
-**Onboarding Users with Exchange Management Shell**
+## Onboarding Users with Exchange Management Shell
 
 **Prerequisites:**
 
