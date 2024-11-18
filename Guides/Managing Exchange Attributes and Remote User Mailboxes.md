@@ -1,7 +1,5 @@
 # Table of Contents
 
-Here's the full TOC with proper formatting and Option 3 included:
-
 1. [RBAC Roles and Permissions Required](#rbac-roles-and-permissions-required)
    - [On-Premises Active Directory and Exchange Server](#on-premises-active-directory-and-exchange-server)
    - [Entra ID (Formerly Azure Active Directory) and Exchange Online](#entra-id-formerly-azure-active-directory-and-exchange-online)
