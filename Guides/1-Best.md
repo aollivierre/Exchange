@@ -152,7 +152,7 @@ Add-RoleGroupMember -Identity "Recipient Management" -Member "AdminUser"
 In a hybrid Exchange environment, it's recommended to enable **Exchange Hybrid writeback** in **Entra ID Connect Sync** (formerly Azure AD Connect Sync). This feature ensures that your on-premises Active Directory (AD) remains the source of authority by synchronizing certain attributes from Exchange Online back to your on-premises AD. This synchronization maintains consistency of user and mailbox attributes when changes are made to Exchange Online mailboxes.
 
 
-> 🔔 **Note:** If you have Azure AD Premium P1 (Entra ID P1) licenses, enabling all write-back features in Azure AD Connect Sync (traditional sync produc) towards the very end of the configuratrion wizard is a smart move in most hybrid environments..
+> 🔔 **Note:** If you have Azure AD Premium P1 (Entra ID P1) licenses, enabling all write-back features in Azure AD Connect Sync (traditional sync produc) towards the very end of the configuratrion wizard is a smart move in most hybrid environments.
 
 
 **Benefits of Enabling Exchange Hybrid Writeback**
@@ -546,7 +546,7 @@ This section provides step-by-step instructions for onboarding and offboarding u
 
 ---
 
-## Onboarding Users with Exchange Recipient Management PowerShell Module
+## Onboarding Users with Exchange Recipient Management PowerShell Module/Snap-In
 
 **Steps:**
 
@@ -554,7 +554,8 @@ This section provides step-by-step instructions for onboarding and offboarding u
 
    - **Download the Exchange Management Tools:**
      - Obtain the latest version of the **Exchange Server 2019 Setup** files from Microsoft's official site.
-     - **Note:** You don't need to install Exchange Server; you'll extract and install only the management tools.
+    
+     - > 🔔 **Note:** You don't need to install Exchange Server Mailbox Server role during Exchange installation; you'll extract and install only the management tools which will install Exchange Management Shell (EMS) and other Exchange related tools but it will not include Exchange Admin Center (EAC) which is the management Web UI as that one is installed if you install the Mailbox server role. EMS won't connect unless there is a mailbox server role enabled Exchange Server available but the EMS will allow you to use the lightweight PowerShell Module/Snap-In
 
    - **Extract and Install Management Tools:**
      - Run the Exchange Server setup with the `/IAcceptExchangeServerLicenseTerms` and `/InstallManagementTools` switches.
