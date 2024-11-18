@@ -22,8 +22,8 @@
    - [Onboarding Users with Exchange Management Shell](#onboarding-users-with-exchange-management-shell)
    - [Offboarding Users with Exchange Management Shell](#offboarding-users-with-exchange-management-shell)
 6. [Option 3: Using the Exchange Recipient Management PowerShell Snapin](#option-3-using-the-exchange-recipient-management-powershell-snapin)
-   - [Onboarding Users with Exchange Recipient Management PowerShell Module](#onboarding-users-with-exchange-recipient-management-powershell-snapin)
-   - [Offboarding Users with Exchange Recipient Management PowerShell Module](#offboarding-users-with-exchange-recipient-management-powershell-snapin)
+   - [Onboarding Users with Exchange Recipient Management PowerShell Snapin](#onboarding-users-with-exchange-recipient-management-powershell-snapin)
+   - [Offboarding Users with Exchange Recipient Management PowerShell Snapin](#offboarding-users-with-exchange-recipient-management-powershell-snapin)
    - [Important Considerations](#important-considerations-2)
 7. [Installing Exchange Server 2019 on Windows Server Core 2019/2022](#installing-exchange-server-2019-on-windows-server-core-20192022)
    - [Overview](#overview)
@@ -1343,7 +1343,7 @@ By utilizing this method, organizations can simplify their infrastructure by rem
 
 ---
 
-# Option 3: Using the Exchange Recipient Management PowerShell Module
+# Option 3: Using the Exchange Recipient Management PowerShell Snapin
 
 This section provides step-by-step instructions for onboarding and offboarding users using the **Exchange Recipient Management PowerShell module** in a hybrid Exchange environment without an on-premises Exchange mailbox server.
 
@@ -1371,7 +1371,7 @@ This section provides step-by-step instructions for onboarding and offboarding u
 
 ---
 
-## Onboarding Users with Exchange Recipient Management PowerShell Snap-In
+## Onboarding Users with Exchange Recipient Management PowerShell SnapIn
 
 **Steps:**
 
@@ -1464,7 +1464,7 @@ This section provides step-by-step instructions for onboarding and offboarding u
 
 ---
 
-## Offboarding Users with Exchange Recipient Management PowerShell Module
+## Offboarding Users with Exchange Recipient Management PowerShell Snapin
 
 **Steps:**
 
