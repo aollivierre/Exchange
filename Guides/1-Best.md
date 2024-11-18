@@ -151,9 +151,8 @@ Add-RoleGroupMember -Identity "Recipient Management" -Member "AdminUser"
 
 In a hybrid Exchange environment, it's recommended to enable **Exchange Hybrid writeback** in **Entra ID Connect Sync** (formerly Azure AD Connect Sync). This feature ensures that your on-premises Active Directory (AD) remains the source of authority by synchronizing certain attributes from Exchange Online back to your on-premises AD. This synchronization maintains consistency of user and mailbox attributes when changes are made to Exchange Online mailboxes.
 
-> **Note:**
-> This is a highlighted block of text with a simple border.
-> You can use this for important notices or information.
+
+> 🔔 **Note:** It's recommended to enable all writeback in the traditional Azure AD Connect Sync (Entra ID Connect Sync) towards the very end of the setup wizard for consistency.
 
 
 **Benefits of Enabling Exchange Hybrid Writeback**
