@@ -21,9 +21,9 @@
 5. [Option 2: Using the Exchange Management Shell](#option-2-using-the-exchange-management-shell)
    - [Onboarding Users with Exchange Management Shell](#onboarding-users-with-exchange-management-shell)
    - [Offboarding Users with Exchange Management Shell](#offboarding-users-with-exchange-management-shell)
-6. [Option 3: Using the Exchange Recipient Management PowerShell Module](#option-3-using-the-exchange-recipient-management-powershell-module)
-   - [Onboarding Users with Exchange Recipient Management PowerShell Module](#onboarding-users-with-exchange-recipient-management-powershell-module)
-   - [Offboarding Users with Exchange Recipient Management PowerShell Module](#offboarding-users-with-exchange-recipient-management-powershell-module)
+6. [Option 3: Using the Exchange Recipient Management PowerShell Snapin](#option-3-using-the-exchange-recipient-management-powershell-snapin)
+   - [Onboarding Users with Exchange Recipient Management PowerShell Module](#onboarding-users-with-exchange-recipient-management-powershell-snapin)
+   - [Offboarding Users with Exchange Recipient Management PowerShell Module](#offboarding-users-with-exchange-recipient-management-powershell-snapin)
    - [Important Considerations](#important-considerations-2)
 7. [Installing Exchange Server 2019 on Windows Server Core 2019/2022](#installing-exchange-server-2019-on-windows-server-core-20192022)
    - [Overview](#overview)
@@ -185,7 +185,7 @@ This cheat sheet provides a concise overview of the three options for onboarding
 
 ---
 
-## Option 3: Using the Exchange Recipient Management PowerShell Module
+## Option 3: Using the Exchange Recipient Management PowerShell Snapin
 
 ### Description
 
@@ -1371,7 +1371,7 @@ This section provides step-by-step instructions for onboarding and offboarding u
 
 ---
 
-## Onboarding Users with Exchange Recipient Management PowerShell Module/Snap-In
+## Onboarding Users with Exchange Recipient Management PowerShell Snap-In
 
 **Steps:**
 
