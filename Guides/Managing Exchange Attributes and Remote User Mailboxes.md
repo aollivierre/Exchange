@@ -1,16 +1,308 @@
-Contents
+# Table of Contents
 
-[RBAC Roles and Permissions Required 2](#_Toc182559512)
+1. [RBAC Roles and Permissions Required](#rbac-roles-and-permissions-required)
+   - [On-Premises Active Directory and Exchange Server](#on-premises-active-directory-and-exchange-server)
+   - [Entra ID (Formerly Azure Active Directory) and Exchange Online](#entra-id-formerly-azure-active-directory-and-exchange-online)
+   - [Entra ID Connect Sync (Formerly Azure AD Connect Sync)](#entra-id-connect-sync-formerly-azure-ad-connect-sync)
+   - [Important Considerations](#important-considerations)
+2. [Best Practices for Administrative Accounts](#best-practices-for-administrative-accounts)
+   - [Separate On-Premises and Cloud-Only Admin Accounts](#separate-on-premises-and-cloud-only-admin-accounts)
+   - [Implement Multi-Factor Authentication (MFA)](#implement-multi-factor-authentication-mfa)
+   - [Principle of Least Privilege](#principle-of-least-privilege)
+   - [Use Privileged Access Workstations (PAWs)](#use-privileged-access-workstations-paws)
+3. [Enabling Exchange Hybrid Writeback in Entra ID Connect Sync](#enabling-exchange-hybrid-writeback-in-entra-id-connect-sync)
+   - [Benefits of Enabling Exchange Hybrid Writeback](#benefits-of-enabling-exchange-hybrid-writeback)
+   - [How to Enable Exchange Hybrid Writeback](#how-to-enable-exchange-hybrid-writeback)
+   - [Important Considerations](#important-considerations-1)
+   - [Why Exchange Hybrid Writeback is Recommended](#why-exchange-hybrid-writeback-is-recommended)
+4. [Option 1: Using the Exchange Admin Center](#option-1-using-the-exchange-admin-center)
+   - [Onboarding Users with Exchange Admin Center](#onboarding-users-with-exchange-admin-center)
+   - [Offboarding Users with Exchange Admin Center](#offboarding-users-with-exchange-admin-center)
+5. [Option 2: Using the Exchange Management Shell](#option-2-using-the-exchange-management-shell)
+   - [Onboarding Users with Exchange Management Shell](#onboarding-users-with-exchange-management-shell)
+   - [Offboarding Users with Exchange Management Shell](#offboarding-users-with-exchange-management-shell)
+6. [Option 3: Using the Exchange Recipient Management PowerShell Snapin](#option-3-using-the-exchange-recipient-management-powershell-snapin)
+   - [Onboarding Users with Exchange Recipient Management PowerShell Snapin](#onboarding-users-with-exchange-recipient-management-powershell-snapin)
+   - [Offboarding Users with Exchange Recipient Management PowerShell Snapin](#offboarding-users-with-exchange-recipient-management-powershell-snapin)
+   - [Important Considerations](#important-considerations-2)
+7. [Installing Exchange Server 2019 on Windows Server Core 2019/2022](#installing-exchange-server-2019-on-windows-server-core-20192022)
+   - [Overview](#overview)
+   - [Operating System Requirements](#operating-system-requirements)
+   - [Benefits of Using Server Core](#benefits-of-using-server-core)
+   - [Installation Steps](#installation-steps)
+   - [Managing Exchange Server on Server Core](#managing-exchange-server-on-server-core)
+   - [Recommended Approach Over Server with Desktop Experience](#recommended-approach-over-server-with-desktop-experience)
+   - [Important Considerations](#important-considerations-3)
+   - [Conclusion](#conclusion)
 
-[Best Practices for Administrative Accounts 5](#_Toc182559513)
 
-[Enabling Exchange Hybrid Writeback in Entra ID Connect Sync 7](#_Toc182559514)
 
-[Option 1: Using the Exchange Admin Center 10](#_Toc182559515)
 
-[Offboarding Users with Exchange Admin Center 13](#_Toc182559516)
+| Aspect                             | Option 1: Exchange Admin Center (EAC) | Option 2: Exchange Management Shell (EMS) | Option 3: Exchange Recipient Management PowerShell Module |
+|------------------------------------|---------------------------------------|-------------------------------------------|----------------------------------------------------------|
+| **Description**                    | Web-based GUI for managing Exchange   | PowerShell cmdlets for Exchange management| PowerShell module for recipient management without on-premises Exchange server |
+| **Primary Tools Used**             | Exchange Admin Center (Web GUI)       | Exchange Management Shell (PowerShell)    | Exchange Recipient Management PowerShell Module |
+| **Prerequisites**                  | - Access to EAC<br>- Admin permissions<br>- Hybrid setup with Exchange Online | - EMS installed<br>- Admin permissions<br>- Hybrid setup with Exchange Online | - Exchange Recipient Management tools installed<br>- Exchange schema extended in AD<br>- No on-premises Exchange server required |
+| **Administrative Skill Level**     | Beginner to Intermediate              | Intermediate to Advanced                  | Intermediate to Advanced |
+| **Permissions Required**           | - On-premises: Recipient Management Role<br>- Cloud: User Administrator, Exchange Administrator | - On-premises: Recipient Management Role<br>- Cloud: User Administrator, Exchange Administrator | - On-premises AD permissions<br>- Cloud: User Administrator, Exchange Administrator |
+| **Ease of Use**                    | User-friendly interface               | Requires knowledge of PowerShell commands | Requires knowledge of PowerShell; no GUI |
+| **Capabilities**                   | - Full recipient management<br>- GUI-based management<br>- Onboarding/offboarding | - Advanced management tasks<br>- Scripting and automation<br>- Onboarding/offboarding | - Manage recipients without on-premises Exchange server<br>- Onboarding/offboarding<br>- Decommission on-premises Exchange server |
+| **Limitations**                    | - Less suitable for automation<br>- GUI may be slower for bulk operations | - Requires PowerShell expertise<br>- On-premises Exchange server must be maintained | - Requires PowerShell expertise<br>- Limited to recipient management<br>- Some Exchange features unavailable without on-premises server |
+| **Use Cases**                      | - Small to medium organizations<br>- Administrators preferring GUI<br>- Regular recipient management | - Automation and scripting<br>- Bulk operations<br>- Advanced configuration | - Organizations migrating fully to Exchange Online<br>- Decommissioning on-premises Exchange servers<br>- Minimizing infrastructure |
+| **Best For**                       | - GUI-based management needs<br>- Less frequent changes<br>- Simpler environments | - Complex environments<br>- Need for automation<br>- Experienced admins | - Reducing on-premises footprint<br>- Post-migration management<br>- Maintaining AD as source of authority |
+| **Decommission On-Premises Exchange Server** | No                                | No                                        | Yes |
+| **Hybrid Exchange Writeback Recommended** | Yes                               | Yes                                       | Yes |
+| **Example Commands/Actions**       | - Create mailbox via GUI<br>- Convert mailbox to shared via GUI | - `New-RemoteMailbox`<br>- `Set-Mailbox`<br>- PowerShell scripts | - `Enable-RemoteMailbox`<br>- `Set-RemoteMailbox`<br>- Manage via AD and sync |
+| **Management Interface**           | Web browser (EAC URL)                 | Exchange Management Shell (EMS)           | PowerShell on management workstation |
+| **Dependency on On-Premises Exchange Server** | Yes                               | Yes                                       | No |
+| **Notes**                          | - Simplifies basic tasks<br>- Less flexible for bulk changes | - More control and flexibility<br>- Suitable for automation | - Requires Exchange schema in AD<br>- Ideal for post-migration scenarios |
 
-[Option 2: Using the Exchange Management Shell 21](#_Toc182559517)
+
+
+
+
+# Quick Reference Cheat Sheet: Managing Exchange Attributes and Remote User Mailboxes
+
+This cheat sheet provides a concise overview of the three options for onboarding and offboarding users in a hybrid Exchange environment. Use this as a quick reference to streamline your administrative tasks.
+
+---
+
+## Option 1: Using the Exchange Admin Center (EAC)
+
+### Description
+
+- **Web-based GUI** for managing Exchange recipients.
+- Ideal for administrators who prefer a graphical interface.
+
+### Onboarding Users
+
+1. **Access EAC**:
+   - Navigate to `https://<Your-Exchange-Server>/ecp`.
+   - Log in with administrative credentials.
+
+2. **Create Remote Mailbox**:
+   - Go to **Recipients** > **Mailboxes**.
+   - Click **Add** (➕) > **Office 365 Mailbox**.
+   - Enter user details and set a temporary password.
+
+3. **Save and Synchronize**:
+   - Save the new user.
+   - Force synchronization with Entra ID Connect Sync if necessary:
+     ```powershell
+     Start-ADSyncSyncCycle -PolicyType Delta
+     ```
+
+4. **Assign License**:
+   - In the **Microsoft 365 Admin Center**, assign the appropriate license to the user.
+
+### Offboarding Users
+
+1. **Convert to Shared Mailbox**:
+   - In EAC, select the user's mailbox.
+   - Click **Convert to shared mailbox**.
+
+2. **Remove License**:
+   - Unassign licenses in the **Microsoft 365 Admin Center**.
+
+3. **Manage OneDrive Data**:
+   - Transfer ownership or set retention policies as needed.
+
+4. **Disable User Account**:
+   - Disable the account in **Active Directory Users and Computers**.
+   - Block sign-in and revoke sessions in Entra ID.
+
+### Considerations
+
+- **RBAC Roles**: Ensure you have the necessary roles assigned.
+- **Data Retention**: Converting to a shared mailbox retains email data without a license.
+- **Backup**: Use a cloud-to-cloud backup solution before making changes.
+
+[Detailed Steps for Option 1](#option-1-using-the-exchange-admin-center)
+
+---
+
+## Option 2: Using the Exchange Management Shell (EMS)
+
+### Description
+
+- **PowerShell-based management** for advanced control and automation.
+- Suitable for bulk operations and scripting.
+
+### Onboarding Users
+
+1. **Open EMS**:
+   - Launch the Exchange Management Shell as an administrator.
+
+2. **Create Remote Mailbox**:
+   ```powershell
+   $Password = Read-Host "Enter temporary password" -AsSecureString
+   New-RemoteMailbox -Name "John Doe" -UserPrincipalName "john.doe@yourdomain.com" -Password $Password
+   ```
+
+3. **Configure User Properties (Optional)**:
+   ```powershell
+   Set-User -Identity "john.doe@yourdomain.com" -Department "Sales"
+   ```
+
+4. **Force Synchronization**:
+   ```powershell
+   Start-ADSyncSyncCycle -PolicyType Delta
+   ```
+
+5. **Assign License**:
+   - Assign the appropriate license in the **Microsoft 365 Admin Center**.
+
+### Offboarding Users
+
+1. **Disable AD Account**:
+   ```powershell
+   Disable-ADAccount -Identity "john.doe@yourdomain.com"
+   ```
+
+2. **Convert to Shared Mailbox**:
+   - Connect to Exchange Online PowerShell:
+     ```powershell
+     Connect-ExchangeOnline -UserPrincipalName admin@yourdomain.com
+     ```
+   - Convert mailbox:
+     ```powershell
+     Set-Mailbox -Identity "john.doe@yourdomain.com" -Type Shared
+     ```
+
+3. **Remove License**:
+   - Unassign licenses in the **Microsoft 365 Admin Center**.
+
+4. **Revoke Access**:
+   - Block sign-in and revoke sessions in Entra ID.
+
+### Considerations
+
+- **Requires PowerShell Expertise**.
+- **On-Premises Exchange Server Must Be Maintained**.
+- **Ideal for Automation and Advanced Configurations**.
+
+[Detailed Steps for Option 2](#option-2-using-the-exchange-management-shell)
+
+---
+
+## Option 3: Using the Exchange Recipient Management PowerShell Snapin
+
+### Description
+
+- **Manage recipients without an on-premises Exchange server**.
+- Allows decommissioning of the last on-premises Exchange mailbox server.
+
+### Onboarding Users
+
+1. **Install Management Tools**:
+   ```powershell
+   Setup.exe /IAcceptExchangeServerLicenseTerms /InstallManagementTools
+   ```
+
+2. **Create AD User**:
+   ```powershell
+   New-ADUser -Name "John Doe" -UserPrincipalName "john.doe@yourdomain.com" -AccountPassword (Read-Host -AsSecureString "Enter Password") -Enabled $true
+   ```
+
+3. **Enable Remote Mailbox**:
+   ```powershell
+   Enable-RemoteMailbox -Identity "john.doe@yourdomain.com" -RemoteRoutingAddress "john.doe@yourdomain.mail.onmicrosoft.com"
+   ```
+
+4. **Force Synchronization**:
+   ```powershell
+   Start-ADSyncSyncCycle -PolicyType Delta
+   ```
+
+5. **Assign License**:
+   - Assign the appropriate license in the **Microsoft 365 Admin Center**.
+
+### Offboarding Users
+
+1. **Disable AD Account**:
+   ```powershell
+   Disable-ADAccount -Identity "john.doe@yourdomain.com"
+   ```
+
+2. **Convert to Shared Mailbox**:
+   - Connect to Exchange Online PowerShell:
+     ```powershell
+     Connect-ExchangeOnline -UserPrincipalName admin@yourdomain.com
+     ```
+   - Convert mailbox:
+     ```powershell
+     Set-Mailbox -Identity "john.doe@yourdomain.com" -Type Shared
+     ```
+
+3. **Remove License**:
+   - Unassign licenses in the **Microsoft 365 Admin Center**.
+
+4. **Revoke Access**:
+   - Block sign-in and revoke sessions in Entra ID.
+
+### Considerations
+
+- **No On-Premises Exchange Server Required**.
+- **Exchange Schema Extensions Must Be Present in AD**.
+- **Ideal for Post-Migration Management**.
+
+[Detailed Steps for Option 3](#option-3-using-the-exchange-recipient-management-powershell-module)
+
+---
+
+## General Best Practices
+
+- **RBAC Roles and Permissions**:
+  - Assign minimal permissions necessary.
+  - Roles do not sync between on-premises and cloud; assign roles in both environments.
+
+- **Enabling Exchange Hybrid Writeback**:
+  - Recommended to maintain attribute consistency.
+  - Enable via Entra ID Connect Sync configuration.
+
+- **Administrative Accounts**:
+  - Use separate on-premises and cloud-only admin accounts.
+  - Avoid synchronizing admin accounts to Entra ID.
+
+- **Security Measures**:
+  - Implement Multi-Factor Authentication (MFA) for all admin accounts.
+  - Follow the principle of least privilege.
+  - Use Privileged Access Workstations (PAWs) for sensitive tasks.
+
+- **Data Backup and Retention**:
+  - Use cloud-to-cloud backup solutions before making changes.
+  - Configure retention policies for OneDrive and mailboxes.
+
+- **Monitoring and Maintenance**:
+  - Regularly monitor synchronization logs.
+  - Keep Entra ID Connect Sync updated and operational.
+  - Stay informed about updates from Microsoft.
+
+---
+
+**Note**: This cheat sheet provides a high-level overview. For detailed instructions and additional considerations, refer to the full sections linked above.
+
+---
+
+# Navigation Links
+
+- **[Option 1: Using the Exchange Admin Center](#option-1-using-the-exchange-admin-center)**
+- **[Option 2: Using the Exchange Management Shell](#option-2-using-the-exchange-management-shell)**
+- **[Option 3: Using the Exchange Recipient Management PowerShell Module](#option-3-using-the-exchange-recipient-management-powershell-module)**
+- **[RBAC Roles and Permissions Required](#rbac-roles-and-permissions-required)**
+- **[Enabling Exchange Hybrid Writeback](#enabling-exchange-hybrid-writeback-in-entra-id-connect-sync)**
+- **[Best Practices for Administrative Accounts](#best-practices-for-administrative-accounts)**
+
+---
+
+**Remember**: Always adhere to your organization's policies and compliance requirements when managing user accounts and data.
+
+If you need more detailed guidance, consult the specific sections in the full guide.
+
+---
+
+# End of Cheat Sheet
+
 
 **IT Guide: Managing Exchange Attributes and Remote User Mailboxes**
 
@@ -155,7 +447,7 @@ In a hybrid Exchange environment, it's recommended to enable **Exchange Hybrid w
 > 🔔 **Note:** If you have Azure AD Premium P1 (Entra ID P1) licenses, enabling all write-back features in Azure AD Connect Sync (traditional sync produc) towards the very end of the configuratrion wizard is a smart move in most hybrid environments.
 
 
-**Benefits of Enabling Exchange Hybrid Writeback**
+## Benefits of Enabling Exchange Hybrid Writeback
 
 - **Attribute Consistency:** Ensures that changes made to mailboxes in Exchange Online are reflected in your on-premises AD. This includes attributes like proxy addresses and mail routing settings, which are crucial for proper email flow and user management.
 - **Source of Authority Maintenance:** Keeps your on-premises AD as the authoritative source for directory information, which is essential for hybrid deployments.
@@ -227,12 +519,260 @@ In a hybrid Exchange environment, it's recommended to enable **Exchange Hybrid w
   - Enables features like cross-premises mailbox permissions and delegate access.
 - **Facilitates Future Migrations:**
   - Keeps the option open for seamless transitions, whether moving more mailboxes to the cloud or back on-premises.
+ 
+
+
+
+
+# Installing Exchange Server 2019 on Windows Server Core 2019/2022
+
+This section provides guidance on installing **Exchange Server 2019** on **Windows Server Core 2019** or **Windows Server Core 2022**. It highlights the operating system requirements, benefits of using Server Core, and management options available. Deploying Exchange Server on Server Core is recommended over the Desktop Experience version due to its reduced footprint and security advantages.
+
+## Overview
+
+- **Exchange Server 2019** supports installation on **Windows Server Core** editions.
+- **Server Core** provides a minimal installation option, reducing the server's surface area for attacks and maintenance requirements.
+- Exchange Server is primarily managed via **PowerShell** and remote management tools, making Server Core an ideal platform.
+
+## Operating System Requirements
+
+### Supported Operating Systems
+
+- **Windows Server 2019 Server Core**
+- **Windows Server 2022 Server Core**
+
+**Note:** Ensure that the latest cumulative updates for both Windows Server and Exchange Server are applied to support all features and receive security updates.
+
+### Prerequisites
+
+- **Hardware Requirements:**
+  - **Processor:** 64-bit processor with at least 2 cores.
+  - **Memory:** Minimum of 128 GB RAM (recommended for Mailbox servers).
+  - **Disk Space:** At least 30 GB free space on the installation drive, plus additional space for mailbox databases and logs.
+- **Active Directory:**
+  - Active Directory forest functional level of **Windows Server 2012 R2** or higher.
+  - At least one writable Global Catalog server in each Active Directory site where you plan to install Exchange.
+- **Networking:**
+  - Static IP address assigned to the server.
+  - Proper DNS configuration.
+
+### Software Requirements
+
+- **.NET Framework 4.8**
+- **Visual C++ Redistributable Package for Visual Studio 2012**
+- **Unified Communications Managed API (UCMA) 4.0 Runtime**
+- **Windows Features:**
+  - **Exchange Server Mailbox role:** Install required Windows features using the provided scripts or manually via PowerShell.
+
+## Benefits of Using Server Core
+
+- **Reduced Attack Surface:**
+  - Fewer installed components mean fewer vulnerabilities.
+- **Lower Maintenance:**
+  - Reduced need for updates and patches compared to the full Desktop Experience.
+- **Improved Performance:**
+  - Less resource consumption due to the absence of GUI components.
+- **Enhanced Security:**
+  - Minimalistic design limits the potential for unauthorized access.
+- **Efficiency:**
+  - Ideal for roles that do not require a GUI, such as Exchange Server, which is primarily managed via PowerShell and remote tools.
+
+## Installation Steps
+
+### Step 1: Prepare the Server
+
+1. **Install Windows Server Core:**
+   - Install either **Windows Server 2019 Server Core** or **Windows Server 2022 Server Core**.
+   - Configure the server with a static IP address and join it to the domain.
+
+2. **Update the Server:**
+   - Install the latest Windows updates.
+     ```powershell
+     sconfig
+     ```
+     - Select option **6** to download and install updates.
+
+3. **Configure Time Zone:**
+   - Set the correct time zone.
+     ```powershell
+     tzutil /s "Pacific Standard Time"
+     ```
+
+4. **Rename the Server (Optional):**
+   - Assign a meaningful name to the server.
+     ```powershell
+     Rename-Computer -NewName "EXCH2019CORE"
+     ```
+     - Reboot the server to apply changes.
+
+### Step 2: Install Required Windows Features
+
+- **Install Prerequisites Using PowerShell:**
+
+  For the **Mailbox** role, execute the following command:
+
+  ```powershell
+  Install-WindowsFeature Server-Media-Foundation, RSAT-ADDS
+  ```
+
+- **Install Other Required Components:**
+
+  - **.NET Framework 4.8:**
+    - Download and install the offline installer for .NET Framework 4.8.
+
+  - **Visual C++ Redistributable Package for Visual Studio 2012:**
+    - Download and install both **vcredist_x64.exe** and **vcredist_x86.exe**.
+
+  - **Unified Communications Managed API (UCMA) 4.0 Runtime:**
+    - Download and install **Ucmaredist.msi**.
+
+### Step 3: Prepare Active Directory
+
+1. **Extend the Schema:**
+   - Run the following command from the Exchange installation files directory:
+     ```powershell
+     Setup.exe /PrepareSchema /IAcceptExchangeServerLicenseTerms
+     ```
+
+2. **Prepare Active Directory:**
+   - Prepare the Active Directory forest:
+     ```powershell
+     Setup.exe /PrepareAD /OrganizationName:"YourOrganization" /IAcceptExchangeServerLicenseTerms
+     ```
+   - Prepare all domains:
+     ```powershell
+     Setup.exe /PrepareAllDomains /IAcceptExchangeServerLicenseTerms
+     ```
+
+### Step 4: Install Exchange Server 2019
+
+1. **Mount the Exchange Server 2019 Installation Media:**
+   - Copy the Exchange installation files to a local directory or mount the ISO.
+
+2. **Install Exchange Server Using Setup Command:**
+   - Execute the following command to install the Mailbox role:
+     ```powershell
+     Setup.exe /Mode:Install /Role:Mailbox /IAcceptExchangeServerLicenseTerms
+     ```
+
+   - **Note:** If you plan to use the Edge Transport role, it must be installed on a separate server.
+
+3. **Complete the Installation:**
+   - The setup will progress through several stages, including copying files, installing the Exchange Server roles, and configuring services.
+   - Upon completion, verify that the installation was successful.
+
+### Step 5: Apply the Latest Cumulative Update
+
+- **Download and Install Cumulative Update:**
+  - Obtain the latest cumulative update (CU) for Exchange Server 2019 from Microsoft's official website.
+  - Run the CU installer:
+    ```powershell
+    Setup.exe /Mode:Upgrade /IAcceptExchangeServerLicenseTerms
+    ```
+
+## Managing Exchange Server on Server Core
+
+With Server Core lacking a graphical user interface (GUI), management is performed using remote tools and command-line interfaces.
+
+### Windows Admin Center (WAC)
+
+- **Overview:**
+  - WAC is a browser-based management tool that provides a modern interface for managing servers.
+- **Installation:**
+  - Install WAC on a separate management server or workstation.
+- **Features:**
+  - Manage server settings, services, firewall, and performance.
+  - Access PowerShell remotely.
+- **Usage:**
+  - Connect to the Server Core instance via WAC to perform administrative tasks.
+
+### PowerShell
+
+- **Exchange Management Shell (EMS):**
+  - Use EMS for Exchange-specific management tasks.
+  - Access EMS remotely from a management workstation:
+    ```powershell
+    Enter-PSSession -ComputerName EXCH2019CORE
+    ```
+- **Remote PowerShell:**
+  - Enable PowerShell remoting on the Server Core server.
+    ```powershell
+    Enable-PSRemoting -Force
+    ```
+  - Manage the server using standard PowerShell cmdlets.
+
+### Remote Server Administration Tools (RSAT)
+
+- **Overview:**
+  - RSAT allows administrators to manage Windows Servers remotely from a Windows 10/11 workstation.
+- **Installation:**
+  - Install RSAT components via **Settings** > **Apps** > **Optional features**.
+- **Features:**
+  - Access tools like Active Directory Users and Computers, DNS management, and more.
+
+### Exchange Administration Center (EAC)
+
+- **Access via Web Browser:**
+  - The EAC is a web-based management console accessible from a remote machine.
+  - URL format:
+    ```
+    https://<ExchangeServerFQDN>/ecp
+    ```
+- **Usage:**
+  - Perform recipient management, organization configuration, and other administrative tasks.
+
+### Server Manager
+
+- **Limited Functionality:**
+  - Server Manager cannot be run locally on Server Core but can manage Server Core instances remotely.
+- **Usage:**
+  - Add the Server Core server to Server Manager on a remote workstation or server.
+  - Manage roles, features, and basic server settings.
+
+### Other Remote Management Tools
+
+- **Remote Desktop Services (RDS):**
+  - Connect via RDS for command-line access.
+- **Event Viewer:**
+  - Access logs remotely using **Event Viewer** connected to the Server Core instance.
+- **Performance Monitor:**
+  - Monitor performance counters remotely.
+
+## Recommended Approach Over Server with Desktop Experience
+
+- **Efficiency:**
+  - Server Core reduces resource consumption by eliminating unnecessary GUI components.
+- **Security:**
+  - Fewer installed features reduce the attack surface and potential vulnerabilities.
+- **Maintenance:**
+  - Decreased need for updates and patches simplifies maintenance schedules.
+- **Management Alignment:**
+  - Since Exchange Server is primarily managed via PowerShell and remote tools, the absence of a GUI does not hinder administrative tasks.
+- **Cost-Effective:**
+  - Lower resource requirements can lead to cost savings in hardware and energy consumption.
+
+## Important Considerations
+
+- **Training:**
+  - Administrators should be comfortable with command-line tools and remote management.
+- **Compatibility:**
+  - Verify that all third-party applications and monitoring tools support Server Core.
+- **Troubleshooting:**
+  - Without a GUI, troubleshooting requires familiarity with command-line diagnostics and remote tools.
+- **Backup and Recovery:**
+  - Ensure that your backup solutions support Server Core environments.
+
+## Conclusion
+
+Deploying Exchange Server 2019 on Windows Server Core 2019 or 2022 is a strategic choice that enhances security, reduces maintenance overhead, and aligns with modern management practices. By leveraging remote management tools such as Windows Admin Center, PowerShell, and RSAT, administrators can efficiently manage Exchange Server without the need for a local GUI. This approach is recommended over the traditional Desktop Experience installation, particularly in environments where server resources and security are paramount.
+
+
 
 # Option 1: Using the Exchange Admin Center
 
 This section provides step-by-step instructions for onboarding and offboarding users using the **Exchange Admin Center (EAC)** in a hybrid Exchange environment.
 
-**Onboarding Users with Exchange Admin Center**
+## Onboarding Users with Exchange Admin Center
 
 **Prerequisites:**
 
@@ -413,7 +953,7 @@ Start-ADSyncSyncCycle -PolicyType Delta
 
 This section provides step-by-step instructions for onboarding and offboarding users using the **Exchange Management Shell (EMS)** in a hybrid Exchange environment.
 
-**Onboarding Users with Exchange Management Shell**
+## Onboarding Users with Exchange Management Shell
 
 **Prerequisites:**
 
@@ -437,7 +977,11 @@ $Password = Read-Host "Enter temporary password" -AsSecureString
 
 New-RemoteMailbox -Name "John Doe" -FirstName "John" -LastName "Doe" -UserPrincipalName "<john.doe@yourdomain.com>" -Password $Password
 
-You can instead use this script https://github.com/aollivierre/Exchange/blob/main/Exchange2/1013/Exchange/New-RemoteSharedMailbox-v10%20copy.ps1 to automate the entire process. Please make sure to first update the values inside of the script to meet your needs before running it.
+
+
+> 🔔 **Note:** You can instead use this script https://github.com/aollivierre/Exchange/blob/main/Exchange2/1013/Exchange/New-RemoteSharedMailbox-v10%20copy.ps1 to automate the entire process. Please make sure to first update the values inside of the script to meet your needs before running it.
+
+
 
 - - - **Note:**
             - Replace "John Doe", "John", "Doe", and "<john.doe@yourdomain.com>" with the user's actual information.
@@ -508,7 +1052,290 @@ Set-Mailbox "<john.doe@yourdomain.com>" -RetentionPolicy "Default MRM Policy" -E
 
 
 
-  Yes, you are correct. Using the **Exchange Recipient Management** tools allows IT administrators to manage Exchange recipient objects without the need to maintain an on-premises Exchange mailbox server. This approach enables you to decommission the last on-premises Exchange mailbox server while still retaining the ability to manage mailboxes and recipient attributes in a hybrid environment.
+
+## Offboarding Users with Exchange Management Shell
+
+This section provides detailed steps for offboarding users using the **Exchange Management Shell (EMS)** in a hybrid Exchange environment. Offboarding involves disabling the user account, managing mailbox data, and ensuring compliance with data retention policies.
+
+**Prerequisites:**
+
+- Administrative permissions on both on-premises Exchange and Exchange Online.
+  - Follow the same RBAC requirements mentioned in the [RBAC Roles and Permissions Required](#rbac-roles-and-permissions-required) section.
+- Exchange Management Shell is installed and accessible.
+- Understanding of company policies regarding data retention and user account deletion.
+- Ensure that a cloud backup solution (e.g., Datto SaaS Protection) is in place to back up mailbox and OneDrive data before proceeding.
+
+**Steps:**
+
+1. **Open Exchange Management Shell:**
+
+   - Log in to your on-premises Exchange server or a workstation with the Exchange management tools installed.
+   - Open the **Exchange Management Shell** as an administrator.
+
+2. **Convert the Mailbox to a Shared Mailbox:**
+
+   - **Connect to Exchange Online PowerShell:**
+
+     ```powershell
+     Import-Module ExchangeOnlineManagement
+     Connect-ExchangeOnline -UserPrincipalName admin@yourdomain.com
+     ```
+
+     - Replace `admin@yourdomain.com` with your administrator account.
+     - Ensure you have the necessary permissions in Exchange Online.
+
+   - **Convert the User's Mailbox:**
+
+     ```powershell
+     Set-Mailbox -Identity "john.doe@yourdomain.com" -Type Shared
+     ```
+
+     - Replace `"john.doe@yourdomain.com"` with the user's actual email address.
+     - **Note:** Converting the mailbox to a shared mailbox retains the mailbox data without requiring an active license.
+
+3. **Remove Licenses in Microsoft 365:**
+
+   - **Log in to the Microsoft 365 Admin Center:**
+
+     - Navigate to `https://admin.microsoft.com` and sign in with your administrative credentials.
+
+   - **Unassign Licenses:**
+
+     - Go to **Users** > **Active users**.
+     - Select the user you are offboarding.
+     - Click on **Licenses and Apps**.
+     - Uncheck the licenses assigned to the user, especially the **Exchange Online** license.
+     - Click **Save changes**.
+     - **Note:** Removing the license after converting to a shared mailbox ensures that mailbox data is retained without incurring license costs.
+
+4. **Manage OneDrive Data:**
+
+   - **Access OneDrive Settings:**
+
+     - While still in the **Microsoft 365 Admin Center**, select the user and click on **OneDrive**.
+
+   - **Transfer Ownership or Set Retention Policies:**
+
+     - **Create an Access Link:**
+
+       - Click **Create link to files** to generate a direct link to the user's OneDrive files.
+
+     - **Assign a Manager:**
+
+       - Under **Get access to files**, enter the name of the manager or designated user who should have access to the OneDrive data.
+
+     - **Configure OneDrive Retention Settings:**
+
+       - Go to the **SharePoint Admin Center**.
+       - Under **Retention**, set the retention period for OneDrive data (up to a maximum of 3,650 days).
+       - **Note:** Proper retention settings ensure compliance with data preservation policies.
+
+5. **Backup Data (Recommended):**
+
+   - **Use a Cloud Backup Solution:**
+
+     - Before proceeding further, back up the user's mailbox and OneDrive data using your cloud backup solution (e.g., Datto SaaS Protection).
+     - This provides an extra layer of protection against data loss and supports compliance requirements.
+
+6. **Disable the User Account in Active Directory:**
+
+   - **Disable the Account:**
+
+     - Open **Active Directory Users and Computers** on your on-premises server.
+     - Locate the user account.
+     - Right-click on the user and select **Disable Account**.
+     - **Note:** Disabling the account prevents the user from accessing on-premises resources.
+
+   - **Ensure Synchronization with Entra ID:**
+
+     - Entra ID Connect Sync (formerly Azure AD Connect Sync) will synchronize the change to Entra ID.
+     - To force immediate synchronization, run the following command on the server running Entra ID Connect Sync:
+
+       ```powershell
+       Start-ADSyncSyncCycle -PolicyType Delta
+       ```
+
+7. **Block Sign-In and Revoke Authentication Tokens:**
+
+   - **Block Sign-In:**
+
+     - In the **Microsoft 365 Admin Center**, navigate to **Users** > **Active users**.
+     - Select the user account.
+     - Toggle **Block sign-in** to **On**.
+     - Click **Save changes**.
+     - **Note:** Blocking sign-in prevents the user from accessing Microsoft 365 services.
+
+   - **Revoke Authentication Tokens:**
+
+     - **Using Entra ID PowerShell:**
+
+       - **Connect to Entra ID PowerShell:**
+
+         ```powershell
+         Connect-MgGraph -Scopes "User.ReadWrite.All"
+         ```
+
+         - Sign in with your administrative credentials when prompted.
+
+       - **Revoke User Sessions:**
+
+         ```powershell
+         Revoke-MgUserSignInSession -UserId "john.doe@yourdomain.com"
+         ```
+
+     - **Alternatively, Using the Entra ID Admin Center:**
+
+       - Navigate to the **Entra ID Admin Center** (`https://entra.microsoft.com`).
+       - Go to **Users** > **All users**.
+       - Select the user, then click on **Authentication methods**.
+       - Click **Require re-register multifactor authentication**.
+       - Under **Devices**, click **Revoke sessions**.
+
+8. **(Optional) Remove the User from Entra ID Connect Sync Scope:**
+
+   - **Exclude the User from Synchronization:**
+
+     - Modify the synchronization rules or organizational units (OUs) in Entra ID Connect Sync to exclude the user.
+     - This will cause the user to be deleted from Entra ID on the next sync cycle.
+
+   - **Force Synchronization:**
+
+     ```powershell
+     Start-ADSyncSyncCycle -PolicyType Delta
+     ```
+
+   - **Restore the User as a Cloud-Only Account (If Necessary):**
+
+     - Navigate to the **Entra ID Admin Center** > **Users** > **Deleted users**.
+     - Select the user and click **Restore**.
+     - The user becomes a cloud-only account.
+
+   - **Run the User Deletion Wizard:**
+
+     - In the **Microsoft 365 Admin Center**, delete the user using the **Delete user** option.
+     - This process converts the mailbox to a shared mailbox automatically and allows you to assign OneDrive data to another user.
+
+   - **Note:** This alternative method automates several steps but requires careful handling to avoid unintended data loss.
+
+9. **Verify Offboarding Completion:**
+
+   - **Mailboxes:**
+
+     - Confirm that the user's mailbox is now a shared mailbox in Exchange Online.
+     - Ensure that other users who need access have the appropriate permissions.
+
+   - **Licenses:**
+
+     - Verify that all licenses have been unassigned from the user account.
+
+   - **User Account:**
+
+     - Ensure the user account is disabled in Active Directory and blocked in Entra ID.
+
+   - **Data Access:**
+
+     - Check that OneDrive data has been transferred or is accessible as per your organization's policies.
+
+   - **Security:**
+
+     - Confirm that all authentication sessions have been revoked and that the user cannot access any company resources.
+
+**Important Considerations:**
+
+- **Data Retention Compliance:**
+
+  - Always adhere to your organization's data retention policies.
+  - Converting the mailbox to a shared mailbox retains email data without needing a license.
+  - OneDrive data retention must be managed separately through SharePoint Online settings.
+
+- **License Considerations:**
+
+  - Shared mailboxes with over 50 GB of data or with In-Place Archive enabled require a license.
+  - Ensure compliance with Microsoft licensing requirements.
+
+- **Security Measures:**
+
+  - Promptly blocking sign-in and revoking sessions helps prevent unauthorized access.
+  - Regularly review access logs for any suspicious activity.
+
+- **Cloud Backup Solutions:**
+
+  - Utilizing cloud-to-cloud backup solutions ensures that you have a secure backup of all user data before making any changes.
+  - This is especially important if legal holds or compliance requirements mandate data preservation.
+
+- **Disabling vs. Deleting Accounts:**
+
+  - Disabling the user account in Active Directory prevents access but retains the account for any necessary data retrieval.
+  - Deleting the account is irreversible and should only be done if you're certain that all data is no longer needed.
+
+- **Disconnecting Mailbox in Exchange On-Premises:**
+
+  - In a hybrid environment, it's generally not necessary to disable or disconnect the mailbox in on-premises Exchange after converting it to a shared mailbox in Exchange Online.
+  - The shared mailbox resides in Exchange Online, and the on-premises user account can remain disabled.
+
+- **Alternative Offboarding Method:**
+
+  - The alternative method of removing the user from the sync scope and restoring them as a cloud-only user may simplify the process but requires careful handling to avoid unintended data loss.
+  - Evaluate this option based on your organization's policies and the specific circumstances.
+
+**Notes:**
+
+- **RBAC Roles:**
+
+  - On-premises Exchange: Membership in the **Recipient Management** role group is required.
+  - Exchange Online: Ensure you have the **Exchange Administrator** role to convert mailboxes.
+
+- **PowerShell Modules:**
+
+  - Ensure you have the **ExchangeOnlineManagement** and **AzureAD** (or **Microsoft Graph PowerShell**) modules installed and updated.
+
+- **Communication:**
+
+  - Notify relevant stakeholders (e.g., managers, HR) about the offboarding to coordinate related processes.
+
+- **Audit and Compliance:**
+
+  - Document all actions taken during the offboarding process.
+  - Maintain records for compliance and auditing purposes.
+
+**Summary of Commands:**
+
+- **Convert Mailbox to Shared:**
+
+  ```powershell
+  Set-Mailbox -Identity "john.doe@yourdomain.com" -Type Shared
+  ```
+
+- **Disable AD Account:**
+
+  ```powershell
+  Disable-ADAccount -Identity "john.doe@yourdomain.com"
+  ```
+
+- **Force Entra ID Connect Sync:**
+
+  ```powershell
+  Start-ADSyncSyncCycle -PolicyType Delta
+  ```
+
+- **Revoke User Sessions:**
+
+  ```powershell
+  Connect-MgGraph -Scopes "User.ReadWrite.All"
+  Revoke-MgUserSignInSession -UserId "john.doe@yourdomain.com"
+  ```
+
+**Conclusion:**
+
+By following these steps, you can effectively offboard users using the Exchange Management Shell in a hybrid Exchange environment. This process ensures that you comply with data retention policies, maintain security, and properly manage user data during offboarding.
+
+---
+
+
+
+
+
+Using the **Exchange Recipient Management** tools allows IT administrators to manage Exchange recipient objects without the need to maintain an on-premises Exchange mailbox server. This approach enables you to decommission the last on-premises Exchange mailbox server while still retaining the ability to manage mailboxes and recipient attributes in a hybrid environment.
 
 The **Exchange Recipient Management PowerShell module** provides the necessary cmdlets to perform recipient management tasks directly against your on-premises Active Directory (AD). These changes are then synchronized to Entra ID (formerly Azure AD) using Entra ID Connect Sync, ensuring that your Exchange Online environment reflects the updates.
 
@@ -516,9 +1343,7 @@ By utilizing this method, organizations can simplify their infrastructure by rem
 
 ---
 
-Let's proceed to **Option 3**, where we'll detail the steps for onboarding and offboarding users using the **Exchange Recipient Management PowerShell module**.
-
-# Option 3: Using the Exchange Recipient Management PowerShell Module
+# Option 3: Using the Exchange Recipient Management PowerShell Snapin
 
 This section provides step-by-step instructions for onboarding and offboarding users using the **Exchange Recipient Management PowerShell module** in a hybrid Exchange environment without an on-premises Exchange mailbox server.
 
@@ -546,7 +1371,7 @@ This section provides step-by-step instructions for onboarding and offboarding u
 
 ---
 
-## Onboarding Users with Exchange Recipient Management PowerShell Module/Snap-In
+## Onboarding Users with Exchange Recipient Management PowerShell SnapIn
 
 **Steps:**
 
@@ -567,9 +1392,9 @@ This section provides step-by-step instructions for onboarding and offboarding u
 2. **Open Exchange Management Shell (EMS):**
 
    - Launch **Exchange Management Shell** or **Windows PowerShell** as an administrator.
-   - Import the **Exchange Recipient Management** module if not loaded automatically.
+   - Import the **Exchange Recipient Management** snap-in
      ```powershell
-     Import-Module ExchangeRecipientManagement
+     Run this https://github.com/aollivierre/Exchange/blob/main/Exchange2/1014/Exchange/1-Copy-Profile-PS5.ps1
      ```
 
 3. **Create a New User in Active Directory:**
@@ -639,7 +1464,7 @@ This section provides step-by-step instructions for onboarding and offboarding u
 
 ---
 
-## Offboarding Users with Exchange Recipient Management PowerShell Module
+## Offboarding Users with Exchange Recipient Management PowerShell Snapin
 
 **Steps:**
 
