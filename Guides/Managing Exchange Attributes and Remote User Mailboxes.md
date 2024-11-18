@@ -527,7 +527,7 @@ Deploying Exchange Server 2019 on Windows Server Core 2019 or 2022 is a strategi
 
 This section provides step-by-step instructions for onboarding and offboarding users using the **Exchange Admin Center (EAC)** in a hybrid Exchange environment.
 
-**## Onboarding Users with Exchange Admin Center**
+## Onboarding Users with Exchange Admin Center
 
 **Prerequisites:**
 
