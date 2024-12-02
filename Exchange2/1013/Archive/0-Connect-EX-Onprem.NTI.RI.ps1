@@ -1,14 +1,14 @@
 # Define the domain name of the Exchange server
-$domainName = 'NTI-CB-EX01.CB.tunngavik.local'
+$domainName = 'NTI-RI-EX02.RI.nti.local'
+# $domainName = '192.168.0.22'
 
-
-ping 'NTI-CB-EX01.CB.tunngavik.local'
-nslookup 'NTI-CB-EX01.CB.tunngavik.local'
-
+# uncomment the following connection tests when debugging
+ping $domainName
+nslookup $domainName
 Test-NetConnection $domainName -Port 5985
 
 # Path to the credentials file
-$SecretsFile = Join-Path -Path $PSScriptRoot -ChildPath 'secrets.exchange.CB.tunngavik.local.psd1'
+$SecretsFile = Join-Path -Path $PSScriptRoot -ChildPath "secrets.exchange.$domainName.psd1"
 
 function Get-ExchangeCredential {
     param (
