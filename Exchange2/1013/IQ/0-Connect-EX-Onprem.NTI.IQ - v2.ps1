@@ -1,9 +1,9 @@
 $ProgressPreference = 'SilentlyContinue'
 
 $servers = @{
-    RI = @{
-        IP = '192.168.0.22'
-        FQDN = 'NTI-RI-EX02.RI.nti.local'
+    IQ = @{
+        IP = '192.168.14.230'
+        FQDN = 'NTI-IQ-EX01.iq.nti.local'
     }
  }
  
@@ -28,6 +28,8 @@ $servers = @{
         return $Cred
     }
  }
+
+ $sessionOption = New-PSSessionOption -IdleTimeout 2147483 -SkipCACheck -SkipCNCheck -SkipRevocationCheck
  
  foreach ($server in $servers.GetEnumerator()) {
     # Kerberos connection parameters
@@ -37,7 +39,7 @@ $servers = @{
         Authentication   = 'Kerberos'
         AllowRedirection = $true
         ErrorAction      = 'Stop'
-        SessionOption    = (New-PSSessionOption -IdleTimeout 0)
+        SessionOption    =  $sessionOption
     }
  
     # Basic auth parameters  
@@ -46,7 +48,7 @@ $servers = @{
         ConnectionUri     = "http://$($server.Value.IP)/PowerShell/"
         Authentication   = 'Basic'
         AllowRedirection = $true
-        SessionOption    = (New-PSSessionOption -IdleTimeout 0 -SkipCACheck -SkipCNCheck -SkipRevocationCheck)
+        SessionOption    =  $sessionOption
         ErrorAction      = 'Stop'
     }
  
