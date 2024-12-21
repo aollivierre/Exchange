@@ -221,8 +221,7 @@ function Start-PSTUpload {
 
 # Example usage
 $uploadParams = @{
-    # PSTDirectory = "D:\ExchangeArchives\Import"
-    PSTDirectory = "C:\ExchangeArchives\repaired3"
+    PSTDirectory = "D:\ExchangeArchives\Import"
     SasUrl       = "https://ebb534ec5c8c49568557303.blob.core.windows.net/ingestiondata?sv=2015-04-05&sr=c&si=IngestionSasForAzCopy202412191529268229&sig=2BJ6DFHeKvRYgvFfa1uxhnVm9sspSgpoxOIIKlH%2BSPQ%3D&se=2025-01-18T16%3A31%3A10Z"
     LogPath      = ".\PST_Upload_Logs"
     MaxSizeGB    = 20
